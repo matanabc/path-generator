@@ -6,7 +6,7 @@ This package is base of [Jaci's PathFinder](https://github.com/JacisNonsense/Pat
 ## Usage
 
 ```typescript
-import { Waypoint, PathConfig, Path } from 'path-generator';
+const { Waypoint, PathConfig, Path } = require('path-generator');
 
 const waypoints = [
 	new Waypoint(0, 0, 0, 0, 2),

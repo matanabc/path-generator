@@ -1,10 +1,10 @@
-import { Path, Waypoint, PathConfig, TankModifier } from '../index';
+import { Path, Waypoint, PathConfig, Modifier } from '../index';
 
 const pathConfig = new PathConfig(0.8, 2, 3);
 
 test('Straight path', () => {
 	const waypoints = [new Waypoint(0, 0, 0, 0, 2), new Waypoint(2, 0, 0, 0, 0)];
-	const path = new Path(waypoints, pathConfig, TankModifier);
+	const path = new Path(waypoints, pathConfig, Modifier.tank);
 
 	expect(path.isIllegal()).toBeUndefined();
 	expect(path.getModifierSetpoints()).toBeDefined();
@@ -14,7 +14,7 @@ test('Straight path', () => {
 
 test('Turn path', () => {
 	const waypoints = [new Waypoint(0, 0, 0, 0, 2), new Waypoint(1.5, 1.5, 90, 0, 0)];
-	const path = new Path(waypoints, pathConfig, TankModifier);
+	const path = new Path(waypoints, pathConfig, Modifier.tank);
 	const setpoints = path.getSourceSetpoints();
 
 	expect(path.isIllegal()).toBeUndefined();
@@ -31,7 +31,7 @@ test('Turn path', () => {
 
 test('Turn in place path right', () => {
 	const waypoints = [new Waypoint(0, 0, 0, 0, 2.5), new Waypoint(0, 0, 90, 0, 0)];
-	const path = new Path(waypoints, pathConfig, TankModifier);
+	const path = new Path(waypoints, pathConfig, Modifier.tank);
 	const setpoints = path.getSourceSetpoints();
 
 	expect(path.isIllegal()).toBeUndefined();
@@ -48,7 +48,7 @@ test('Turn in place path right', () => {
 
 test('Turn in place path left', () => {
 	const waypoints = [new Waypoint(0, 0, 0, 0, 2.5), new Waypoint(0, 0, 90, 0, 0)];
-	const path = new Path(waypoints, pathConfig, TankModifier);
+	const path = new Path(waypoints, pathConfig, Modifier.tank);
 	const setpoints = path.getSourceSetpoints();
 
 	expect(path.isIllegal()).toBeUndefined();
@@ -65,7 +65,7 @@ test('Turn in place path left', () => {
 
 test('Illegal path', () => {
 	const waypoints = [new Waypoint(0, 0, 0, 0, 0), new Waypoint(1, 0, 0, 0, 0)];
-	const path = new Path(waypoints, pathConfig, TankModifier);
+	const path = new Path(waypoints, pathConfig, Modifier.tank);
 
 	expect(path.isIllegal()).toBeDefined();
 });

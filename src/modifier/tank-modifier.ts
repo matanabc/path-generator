@@ -54,7 +54,7 @@ export default class TankModifier implements IModifier<TankModify> {
 	}
 }
 
-export class TankModify {
+class TankModify {
 	left: Setpoint[];
 	right: Setpoint[];
 

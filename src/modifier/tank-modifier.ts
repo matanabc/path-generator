@@ -2,7 +2,7 @@ import Setpoint from '../setpoint';
 import IModifier from './imodifier';
 import PathConfig from '../path-config';
 
-export default class TankModifier implements IModifier {
+export default class TankModifier implements IModifier<TankModify> {
 	modify(sourceSetpoints: Setpoint[], pathConfig: PathConfig): TankModify {
 		const leftSetpoints = [],
 			rightSetpoints = [],
@@ -54,12 +54,12 @@ export default class TankModifier implements IModifier {
 	}
 }
 
-class TankModify {
+export class TankModify {
 	left: Setpoint[];
 	right: Setpoint[];
 
 	constructor(left: Setpoint[] = [], right: Setpoint[] = []) {
-		this.left = left;
-		this.right = right;
+		this.left = right;
+		this.right = left;
 	}
 }

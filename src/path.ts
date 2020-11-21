@@ -4,13 +4,13 @@ import Generator from './generator';
 import Waypoints from './waypoint';
 import Setpoint from './setpoint';
 
-export default class Path {
+export default class Path<T> {
 	private generator: Generator;
 	private waypoints: Waypoints[];
 	private pathConfig: PathConfig;
-	private modifierSetpoints: any = undefined;
+	private modifierSetpoints: T;
 
-	constructor(waypoints: Waypoints[], pathConfig: PathConfig, modifier?: new () => IModifier) {
+	constructor(waypoints: Waypoints[], pathConfig: PathConfig, modifier?: new () => IModifier<T>) {
 		this.waypoints = waypoints;
 		this.pathConfig = pathConfig;
 		this.generator = new Generator(this.waypoints, this.pathConfig);
@@ -19,13 +19,10 @@ export default class Path {
 				this.generator.getSourceSetpoint(),
 				this.pathConfig
 			);
+		else this.modifierSetpoints = {} as T;
 	}
 
-	identity<T>(arg: T): T {
-		return arg;
-	}
-
-	getModifierSetpoints(): any {
+	getModifierSetpoints(): T {
 		return this.modifierSetpoints;
 	}
 

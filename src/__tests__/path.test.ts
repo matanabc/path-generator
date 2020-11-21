@@ -8,7 +8,6 @@ test('Straight path', () => {
 	const path = new Path(waypoints, pathConfig);
 
 	expect(path.isIllegal()).toBeUndefined();
-	expect(path.getModifierSetpoints()).toBeUndefined();
 	expect(path.getSourceSetpoints()[0].y).toBe(
 		path.getSourceSetpoints()[path.getSourceSetpoints().length - 1].y
 	);
@@ -25,7 +24,6 @@ test('Turn path', () => {
 	const path = new Path(waypoints, pathConfig);
 
 	expect(path.isIllegal()).toBeUndefined();
-	expect(path.getModifierSetpoints()).toBeUndefined();
 
 	checkSetpointsSpeed(path.getSourceSetpoints(), pathConfig.vMax);
 	checkLastSetpoint(
@@ -40,7 +38,7 @@ test('Turn in place path', () => {
 	const lastSetpoint = path.getSourceSetpoints()[path.getSourceSetpoints().length - 1];
 
 	expect(path.isIllegal()).toBeUndefined();
-	expect(path.getModifierSetpoints()).toBeUndefined();
+
 	expect(lastSetpoint.x).toBeCloseTo(waypoints[1].x);
 	expect(lastSetpoint.y).toBeCloseTo(waypoints[1].y);
 	expect(lastSetpoint.velocity).toBeCloseTo(waypoints[1].v, 0.05);
@@ -59,7 +57,6 @@ test('S path', () => {
 	const path = new Path(waypoints, pathConfig);
 
 	expect(path.isIllegal()).toBeUndefined();
-	expect(path.getModifierSetpoints()).toBeUndefined();
 
 	checkSetpointsSpeed(path.getSourceSetpoints(), pathConfig.vMax);
 	checkLastSetpoint(
@@ -73,7 +70,6 @@ test('Illegal path', () => {
 	const path = new Path(waypoints, pathConfig);
 
 	expect(path.isIllegal()).toBeDefined();
-	expect(path.getModifierSetpoints()).toBeUndefined();
 });
 
 function checkSetpointsSpeed(setpoints: Setpoint[], vMax: number) {

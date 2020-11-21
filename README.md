@@ -1,6 +1,7 @@
 # PathGenerator Package
 
 **PathGenerator** is a motion profile generator, which you can easily generat path for your robot to follow. <br/>
+To see an example of using this package you can take a look at [PathGenerator App](https://github.com/matanabc/path-generator-app).<br/>
 This package is based of [Jaci's PathFinder](https://github.com/JacisNonsense/Pathfinder) with some improvements.
 
 ## Usage

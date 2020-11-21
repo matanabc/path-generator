@@ -10,12 +10,19 @@ export default class Path {
 	private pathConfig: PathConfig;
 	private modifierSetpoints: any = undefined;
 
-	constructor(waypoints: Waypoints[], pathConfig: PathConfig, modifier?: IModifier) {
+	constructor(waypoints: Waypoints[], pathConfig: PathConfig, modifier?: new () => IModifier) {
 		this.waypoints = waypoints;
 		this.pathConfig = pathConfig;
 		this.generator = new Generator(this.waypoints, this.pathConfig);
 		if (modifier !== undefined && this.generator.isIllegal() === undefined)
-			this.modifierSetpoints = modifier.modify(this.generator.getSourceSetpoint(), this.pathConfig);
+			this.modifierSetpoints = new modifier().modify(
+				this.generator.getSourceSetpoint(),
+				this.pathConfig
+			);
+	}
+
+	identity<T>(arg: T): T {
+		return arg;
 	}
 
 	getModifierSetpoints(): any {

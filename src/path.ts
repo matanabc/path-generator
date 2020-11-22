@@ -14,7 +14,7 @@ export default class Path<T> {
 		this.waypoints = waypoints;
 		this.pathConfig = pathConfig;
 		this.generator = new Generator(this.waypoints, this.pathConfig);
-		if (modifier !== undefined && this.generator.isIllegal() === undefined)
+		if (modifier !== undefined && this.generator.getError() === undefined)
 			this.modifierSetpoints = new modifier().modify(
 				this.generator.getSourceSetpoint(),
 				this.pathConfig
@@ -38,7 +38,11 @@ export default class Path<T> {
 		return this.generator.getSourceSetpoint();
 	}
 
-	isIllegal(): any | undefined {
-		return this.generator.isIllegal();
+	isIllegal(): boolean {
+		return this.generator.getError() !== undefined;
+	}
+
+	getError() {
+		return this.generator.getError();
 	}
 }

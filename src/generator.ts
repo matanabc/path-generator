@@ -1,3 +1,4 @@
+import IllegalPath from './errors/illegal-path';
 import { angle2Distance } from './util';
 import PathConfig from './path-config';
 import Waypoint from './waypoint';
@@ -11,7 +12,7 @@ export default class Generator {
 	private splines: Spline[] = [];
 	private segments: Segment[] = [];
 	private setpoints: Setpoint[] = [];
-	private isIegal: any | undefined;
+	private error?: IllegalPath;
 	private isTurnInPlace: boolean = false;
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
@@ -19,8 +20,14 @@ export default class Generator {
 		this.waypoints = this.getFixWaypoints(waypoints, pathConfig.width);
 		for (let i = 0; i < waypoints.length - 1; i++) {
 			const spline = new Spline(this.waypoints[i], this.waypoints[i + 1], pathConfig);
-			this.isIegal = spline.isIllegal();
-			if (this.isIllegal() !== undefined) break;
+			const splineError = spline.getError();
+			if (splineError !== undefined) {
+				this.error = new IllegalPath(
+					`Spline ${i + 1} (between waypoint ${i + 1} to ${i + 2}) is illegal!`,
+					splineError
+				);
+				break;
+			}
 			const segments = this.generateSegments(spline);
 			this.generateSetpoints(spline, segments, lastPosition, pathConfig.robotLoopTime);
 			lastPosition += spline.arc_length;
@@ -84,8 +91,8 @@ export default class Generator {
 		}
 	}
 
-	isIllegal(): undefined | any {
-		return this.isIegal;
+	getError(): IllegalPath | undefined {
+		return this.error;
 	}
 
 	getSourceSetpoint(): Setpoint[] {

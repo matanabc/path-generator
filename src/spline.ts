@@ -1,3 +1,4 @@
+import IllegalSpline from './errors/illegal-spline';
 import { boundRadians, d2r } from './util';
 import PathConfig from './path-config';
 import Waypoint from './waypoint';
@@ -103,34 +104,27 @@ export default class Spline {
 		);
 	}
 
-	isIllegal(): any {
+	getError(): IllegalSpline | undefined {
 		if (this.startPoint.vMax === 0)
-			return {
-				error: `Can't create spline because vMax is equal to 0!\n` + `You need to increase vMax!\n`,
-			};
+			return new IllegalSpline(`Can't create spline because vMax is equal to 0!`, `Increase vMax!`);
 
 		if (this.vMax < this.vEnd)
-			return {
-				error:
-					`Can't get from v0 (${this.V0}) to vEnd (${this.vEnd}) because vMax` +
-					`(${this.vMax}) is smaller then vEnd (${this.vEnd})!\n` +
-					`You need to decrease vEnd or increase vMax!\n` +
-					`Try using vEnd ${this.vMax} or vMax ${this.getVMax(this.pathConfig)}!`,
-			};
+			return new IllegalSpline(
+				`Can't get from v0 (${this.V0}) to vEnd (${this.vEnd}) because vMax` +
+					`(${this.vMax}) is smaller then vEnd (${this.vEnd})!`,
+				`Decrease vEnd or increase vMax!\n` +
+					`Try using vEnd ${this.vMax} or vMax ${this.getVMax(this.pathConfig).toFixed(3)}!`
+			);
 
 		if (new Segment(this.V0, this.vEnd, this.acc).distance > this.arc_length) {
 			const v = Math.sqrt(Math.pow(this.V0, 2) + 2 * this.acc * this.arc_length).toFixed(3);
-			return {
-				error:
-					`Can't get from v0 (${this.V0}) to vEnd (${this.vEnd})!` +
-					`You need to decrease vEnd!\n` +
-					`Try using vEnd ${v}!`,
-			};
+			return new IllegalSpline(
+				`Can't get from v0 (${this.V0}) to vEnd (${this.vEnd})!`,
+				`Decrease vEnd! \nTry using vEnd ${v}!`
+			);
 		}
 
 		if (this.arc_length > 20)
-			return {
-				error: `Spline length is to long!\n` + `You need to cahnge path waypoints!\n`,
-			};
+			return new IllegalSpline(`Spline length is to long!`, `Change path waypoints!`);
 	}
 }

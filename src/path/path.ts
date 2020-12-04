@@ -1,25 +1,27 @@
+import { PathGenerator, TurnInPlaceGenerator } from '../generator/generate';
 import PathConfig from '../path_config/path-config';
-import Generator from '../generate/generator';
-import Waypoints from '../waypoints/waypoint';
+import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint';
 import IPath from './ipath';
 
 export default class Path implements IPath {
-	protected generator: Generator = {} as Generator;
-	protected waypoints: Waypoints[];
+	protected generator: PathGenerator = {} as PathGenerator;
+	protected waypoints: Waypoint[];
 	protected pathConfig: PathConfig;
 
-	constructor(waypoints: Waypoints[], pathConfig: PathConfig) {
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		this.waypoints = waypoints;
 		this.pathConfig = pathConfig;
 		this.generate();
 	}
 
 	protected generate(): void {
-		this.generator = new Generator(this.waypoints, this.pathConfig);
+		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints))
+			this.generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
+		else this.generator = new PathGenerator(this.waypoints, this.pathConfig);
 	}
 
-	getWaypoints(): Waypoints[] {
+	getWaypoints(): Waypoint[] {
 		return this.waypoints;
 	}
 

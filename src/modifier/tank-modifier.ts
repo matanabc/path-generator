@@ -1,28 +1,39 @@
 import Setpoint from '../setpoint';
-import IModifier from './imodifier';
 import PathConfig from '../path_config/path-config';
 
-export default class TankModifier implements IModifier<TankModify> {
-	modify(sourceSetpoints: Setpoint[], pathConfig: PathConfig): TankModify {
-		const leftSetpoints = [],
-			rightSetpoints = [],
-			robotWidth = pathConfig.width / 2;
+export default class TankModifier {
+	protected leftSetpoints: Setpoint[] = [];
+	protected rightSetpoints: Setpoint[] = [];
+
+	constructor(sourceSetpoints: Setpoint[], pathConfig: PathConfig) {
+		this.modify(sourceSetpoints, pathConfig);
+	}
+
+	getLeftSetpoints(): Setpoint[] {
+		return this.rightSetpoints;
+	}
+
+	getRightSetpoints(): Setpoint[] {
+		return this.leftSetpoints;
+	}
+
+	protected modify(sourceSetpoints: Setpoint[], pathConfig: PathConfig): void {
+		const robotWidth = pathConfig.width / 2;
 		var left, right;
 		for (let i = 0; i < sourceSetpoints.length; i++) {
 			left = new Setpoint(sourceSetpoints[i]);
 			right = new Setpoint(sourceSetpoints[i]);
 			this.calculateSetpointCoords(sourceSetpoints[i], left, right, robotWidth);
 			if (i > 0) {
-				this.calculateSetpoint(left, leftSetpoints[i - 1], pathConfig);
-				this.calculateSetpoint(right, rightSetpoints[i - 1], pathConfig);
+				this.calculateSetpoint(left, this.leftSetpoints[i - 1], pathConfig);
+				this.calculateSetpoint(right, this.rightSetpoints[i - 1], pathConfig);
 			}
-			leftSetpoints.push(left);
-			rightSetpoints.push(right);
+			this.rightSetpoints.push(right);
+			this.leftSetpoints.push(left);
 		}
-		return new TankModify(leftSetpoints, rightSetpoints);
 	}
 
-	private calculateSetpointCoords(
+	protected calculateSetpointCoords(
 		source: Setpoint,
 		left: Setpoint,
 		right: Setpoint,
@@ -36,7 +47,7 @@ export default class TankModifier implements IModifier<TankModify> {
 		right.y = source.y - robotWidth * cos_angle;
 	}
 
-	private calculateSetpoint(
+	protected calculateSetpoint(
 		sideSetpoint: Setpoint,
 		lastSetpoint: Setpoint,
 		config: PathConfig
@@ -51,15 +62,5 @@ export default class TankModifier implements IModifier<TankModify> {
 		sideSetpoint.velocity = distance / config.robotLoopTime;
 		acc = (sideSetpoint.velocity - lastSetpoint.velocity) / config.robotLoopTime;
 		sideSetpoint.acceleration = Math.abs(acc) > 0 ? (acc / Math.abs(acc)) * config.acc : 0;
-	}
-}
-
-class TankModify {
-	left: Setpoint[];
-	right: Setpoint[];
-
-	constructor(left: Setpoint[] = [], right: Setpoint[] = []) {
-		this.left = right;
-		this.right = left;
 	}
 }

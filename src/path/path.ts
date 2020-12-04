@@ -2,9 +2,8 @@ import { PathGenerator, TurnInPlaceGenerator } from '../generator/generate';
 import PathConfig from '../path_config/path-config';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint';
-import IPath from './ipath';
 
-export default class Path implements IPath {
+export default class Path {
 	protected generator: PathGenerator = {} as PathGenerator;
 	protected waypoints: Waypoint[];
 	protected pathConfig: PathConfig;

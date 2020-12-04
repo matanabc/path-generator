@@ -1,6 +1,6 @@
 import Setpoint from '../setpoint';
 import IModifier from './imodifier';
-import PathConfig from '../path-config';
+import PathConfig from '../path_config/path-config';
 
 export default class TankModifier implements IModifier<TankModify> {
 	modify(sourceSetpoints: Setpoint[], pathConfig: PathConfig): TankModify {

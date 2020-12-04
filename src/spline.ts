@@ -1,7 +1,7 @@
 import IllegalSpline from './errors/illegal-spline';
 import { boundRadians, d2r } from './util';
-import PathConfig from './path-config';
-import Waypoint from './waypoint';
+import PathConfig from './path_config/path-config';
+import Waypoint from './waypoints/waypoint';
 import Segment from './segment';
 import Coord from './coord';
 

@@ -1,10 +1,10 @@
-import IllegalPath from './errors/illegal-path';
-import { angle2Distance } from './util';
-import PathConfig from './path-config';
-import Waypoint from './waypoint';
-import Setpoint from './setpoint';
-import Segment from './segment';
-import Spline from './spline';
+import IllegalPath from '../errors/illegal-path';
+import { angle2Distance } from '../util';
+import PathConfig from '../path_config/path-config';
+import Waypoint from '../waypoints/waypoint';
+import Setpoint from '../setpoint';
+import Segment from '../segment';
+import Spline from '../spline';
 
 export default class Generator {
 	private time: number = 0;

@@ -33,8 +33,7 @@ export default class Segment {
 			0,
 			this.getPosition(time) + relativePosition,
 			this.getVelocity(time),
-			this.acc,
-			time
+			this.acc
 		);
 	}
 

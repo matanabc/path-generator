@@ -16,8 +16,8 @@ export default class Spline {
 	private x_offset: number = 0;
 	private y_offset: number = 0;
 
-	private pathConfig: PathConfig;
-	private startPoint: Waypoint;
+	public pathConfig: PathConfig;
+	public startPoint: Waypoint;
 	private endPoint: Waypoint;
 
 	arc_length: number = 0;

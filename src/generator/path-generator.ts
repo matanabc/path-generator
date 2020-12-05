@@ -4,6 +4,7 @@ import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint';
 import Segment from '../segment';
 import Spline from '../spline';
+import Coord from '../coord';
 
 export default class PathGenerator {
 	protected pathConfig: PathConfig;
@@ -12,6 +13,7 @@ export default class PathGenerator {
 	protected setpoints: Setpoint[] = [];
 	protected segments: Segment[] = [];
 	protected splines: Spline[] = [];
+	protected coords: Coord[] = [];
 	protected error?: IllegalPath;
 	protected time: number = 0;
 
@@ -28,9 +30,11 @@ export default class PathGenerator {
 			if (this.error !== undefined) break;
 			const segments = this.generateSegments(spline);
 			const setpoints = this.generateSetpoints(spline, segments, lastPosition);
+			const coords = this.generateCoords(spline, setpoints, lastPosition);
 			lastPosition += spline.arc_length;
 			this.setpoints.push(...setpoints);
 			this.segments.push(...segments);
+			this.coords.push(...coords);
 			this.splines.push(spline);
 		}
 	}
@@ -62,7 +66,7 @@ export default class PathGenerator {
 		segments: Segment[],
 		startPosition: number
 	): Setpoint[] {
-		var lastPos = 0;
+		var lastPos = startPosition;
 		const setpoints = [];
 		const robotLoopTime = this.pathConfig.robotLoopTime;
 
@@ -70,8 +74,6 @@ export default class PathGenerator {
 			if (segments[i].distance === 0) continue;
 			for (; this.time < segments[i].totalTime; this.time += robotLoopTime) {
 				const setpoint = segments[i].getSetpoint(this.time, lastPos);
-				const coords = spline.getPositionCoords(setpoint.position);
-				setpoint.setCoords(coords, startPosition);
 				setpoints.push(setpoint);
 			}
 			lastPos += segments[i].distance;
@@ -80,8 +82,19 @@ export default class PathGenerator {
 		return setpoints;
 	}
 
-	getSourceSetpoint(): Setpoint[] {
+	protected generateCoords(spline: Spline, setpoints: Setpoint[], startPosition: number): Coord[] {
+		const coords = [];
+		for (let i = 0; i < setpoints.length; i++)
+			coords.push(spline.getPositionCoords(setpoints[i].position - startPosition));
+		return coords;
+	}
+
+	getSetpoint(): Setpoint[] {
 		return this.setpoints;
+	}
+
+	getCoords(): Coord[] {
+		return this.coords;
 	}
 
 	getError(): IllegalPath | undefined {

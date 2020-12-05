@@ -21,5 +21,5 @@ export function angle2Distance(angle: number, width: number): number {
 }
 
 export function distance2Angle(distance: number, width: number): number {
-	return d2r((distance / width) * 2);
+	return (distance / width) * 2;
 }

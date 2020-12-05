@@ -28,9 +28,6 @@ export default class Segment {
 
 	getSetpoint(time: number, relativePosition: number): Setpoint {
 		return new Setpoint(
-			0,
-			0,
-			0,
 			this.getPosition(time) + relativePosition,
 			this.getVelocity(time),
 			this.acc

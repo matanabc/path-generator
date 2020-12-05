@@ -3,8 +3,8 @@ import Waypoint from '../waypoints/waypoint';
 import PathGenerator from './path-generator';
 import * as Util from '../util';
 import Spline from '../spline';
-import Segment from '../segment';
 import Setpoint from '../setpoint';
+import Coord from '../coord';
 
 export default class TurnInPlaceGenerator extends PathGenerator {
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
@@ -20,17 +20,17 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 		super([startWaypoint, endWaypoint], pathConfig);
 	}
 
-	protected generateSetpoints(
-		spline: Spline,
-		segments: Segment[],
-		startPosition: number
-	): Setpoint[] {
-		const setpoints = super.generateSetpoints(spline, segments, startPosition);
-		setpoints.forEach((setpoint) => {
-			setpoint.x = this.waypoints[0].x;
-			setpoint.y = this.waypoints[0].y;
-		});
-		return setpoints;
+	protected generateCoords(spline: Spline, setpoints: Setpoint[], startPosition: number): Coord[] {
+		const coords = [];
+		for (let i = 0; i < setpoints.length; i++)
+			coords.push(
+				new Coord(
+					spline.startPoint.x,
+					spline.startPoint.y,
+					Util.distance2Angle(setpoints[i].position, spline.pathConfig.width)
+				)
+			);
+		return coords;
 	}
 
 	public static isTurnInPlace(waypoints: Waypoint[]): boolean {

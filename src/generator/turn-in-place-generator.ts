@@ -2,9 +2,9 @@ import PathConfig from '../path_config/path-config';
 import Waypoint from '../waypoints/waypoint';
 import PathGenerator from './path-generator';
 import * as Util from '../util';
-import Spline from '../spline';
+import Spline from '../spline/spline';
 import Setpoint from '../setpoint';
-import Coord from '../coord';
+import Coord from '../spline/coord';
 
 export default class TurnInPlaceGenerator extends PathGenerator {
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {

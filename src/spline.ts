@@ -6,30 +6,27 @@ import * as error from './errors/error';
 import Coord from './coord';
 
 export default class Spline {
-	private c: number = 0;
-	private d: number = 0;
-	private e: number = 0;
-
-	private sampleCount: number = 100000;
-	private knot_distance: number = 0;
-	private angle_offset: number = 0;
-	private x_offset: number = 0;
-	private y_offset: number = 0;
-
-	public pathConfig: PathConfig;
-	public startPoint: Waypoint;
-	private endPoint: Waypoint;
-
-	arc_length: number = 0;
-	vEnd: number = 0;
-	vMax: number = 0;
-	acc: number = 0;
-	V0: number = 0;
+	protected sampleCount: number = 100000;
+	protected knot_distance: number = 0;
+	protected angle_offset: number = 0;
+	protected _pathConfig: PathConfig;
+	protected _arc_length: number = 0;
+	protected _startPoint: Waypoint;
+	protected x_offset: number = 0;
+	protected y_offset: number = 0;
+	protected _endPoint: Waypoint;
+	protected _vEnd: number = 0;
+	protected _vMax: number = 0;
+	protected _acc: number = 0;
+	protected _V0: number = 0;
+	protected c: number = 0;
+	protected d: number = 0;
+	protected e: number = 0;
 
 	constructor(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig) {
-		this.pathConfig = pathConfig;
-		this.startPoint = startPoint;
-		this.endPoint = endPoint;
+		this._pathConfig = pathConfig;
+		this._startPoint = startPoint;
+		this._endPoint = endPoint;
 
 		this.fit_hermite_cubic(startPoint, endPoint);
 		this.calculateDistance();
@@ -61,17 +58,17 @@ export default class Spline {
 			t = i / this.sampleCount;
 			dydt = this.deriv(t);
 			integrand = Math.sqrt(1 + dydt * dydt) / this.sampleCount;
-			this.arc_length += (integrand + last_integrand) / 2;
+			this._arc_length += (integrand + last_integrand) / 2;
 			last_integrand = integrand;
 		}
-		this.arc_length = this.knot_distance * this.arc_length;
+		this._arc_length = this.knot_distance * this.arc_length;
 	}
 
 	private setVellAndAcc(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig): void {
-		this.acc = Math.abs(pathConfig.acc);
-		this.V0 = Math.min(Math.abs(startPoint.v), Math.abs(pathConfig.vMax));
-		this.vEnd = Math.min(Math.abs(endPoint.v), Math.abs(pathConfig.vMax));
-		this.vMax = Math.min(Math.abs(startPoint.vMax), this.getVMax());
+		this._acc = Math.abs(pathConfig.acc);
+		this._V0 = Math.min(Math.abs(startPoint.v), Math.abs(pathConfig.vMax));
+		this._vEnd = Math.min(Math.abs(endPoint.v), Math.abs(pathConfig.vMax));
+		this._vMax = Math.min(Math.abs(startPoint.vMax), this.getVMax());
 	}
 
 	private getVMax(): number {
@@ -109,5 +106,37 @@ export default class Spline {
 		if (this.arc_length > 20) return error.splineIsToLong();
 		if (this.vMax < this.vEnd)
 			return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
+	}
+
+	get startPoint(): Waypoint {
+		return this._startPoint;
+	}
+
+	get endPoint(): Waypoint {
+		return this._endPoint;
+	}
+
+	get pathConfig(): PathConfig {
+		return this._pathConfig;
+	}
+
+	get arc_length(): number {
+		return this._arc_length;
+	}
+
+	get vMax(): number {
+		return this._vMax;
+	}
+
+	get vEnd(): number {
+		return this._vEnd;
+	}
+
+	get V0(): number {
+		return this._V0;
+	}
+
+	get acc(): number {
+		return this._acc;
 	}
 }

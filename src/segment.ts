@@ -1,11 +1,10 @@
 import Setpoint from './setpoint';
 
 export default class Segment {
-	private acc: number = 0;
-	private V0: number = 0;
-
-	totalTime: number = 0;
-	distance: number = 0;
+	private _totalTime: number = 0;
+	private _distance: number = 0;
+	private _acc: number = 0;
+	private _V0: number = 0;
 
 	constructor(V0OrV: number, VeOrDistance: number, acc?: number) {
 		if (acc === undefined) this.constructorB(V0OrV, VeOrDistance);
@@ -13,32 +12,40 @@ export default class Segment {
 	}
 
 	private constructorA(V0: number, Ve: number, acc: number): void {
-		this.V0 = V0;
-		this.acc = V0 < Ve ? acc : -acc;
-		this.totalTime = Math.abs((Ve - V0) / acc);
-		this.distance = this.getPosition(this.totalTime);
+		this._V0 = V0;
+		this._acc = V0 < Ve ? acc : -acc;
+		this._totalTime = Math.abs((Ve - V0) / acc);
+		this._distance = this.getPosition(this._totalTime);
 	}
 
 	private constructorB(V: number, distance: number): void {
-		this.distance = distance;
-		this.V0 = V;
-		this.acc = 0;
-		this.totalTime = distance / V;
+		this._distance = distance;
+		this._V0 = V;
+		this._acc = 0;
+		this._totalTime = distance / V;
 	}
 
 	getSetpoint(time: number, relativePosition: number): Setpoint {
 		return new Setpoint(
 			this.getPosition(time) + relativePosition,
 			this.getVelocity(time),
-			this.acc
+			this._acc
 		);
 	}
 
-	getPosition(time: number): number {
-		return this.V0 * time + 0.5 * this.acc * time * time;
+	private getPosition(time: number): number {
+		return this._V0 * time + 0.5 * this._acc * time * time;
 	}
 
-	getVelocity(time: number): number {
-		return this.V0 + this.acc * time;
+	private getVelocity(time: number): number {
+		return this._V0 + this._acc * time;
+	}
+
+	get totalTime(): number {
+		return this._totalTime;
+	}
+
+	get distance(): number {
+		return this._distance;
 	}
 }

@@ -1,8 +1,8 @@
 import IllegalSpline from './errors/illegal-spline';
-import { boundRadians, d2r } from './util';
 import PathConfig from './path_config/path-config';
 import Waypoint from './waypoints/waypoint';
-import Segment from './segment';
+import { boundRadians, d2r } from './util';
+import * as error from './errors/error';
 import Coord from './coord';
 
 export default class Spline {
@@ -71,10 +71,10 @@ export default class Spline {
 		this.acc = Math.abs(pathConfig.acc);
 		this.V0 = Math.min(Math.abs(startPoint.v), Math.abs(pathConfig.vMax));
 		this.vEnd = Math.min(Math.abs(endPoint.v), Math.abs(pathConfig.vMax));
-		this.vMax = Math.min(Math.abs(startPoint.vMax), this.getVMax(pathConfig));
+		this.vMax = Math.min(Math.abs(startPoint.vMax), this.getVMax());
 	}
 
-	private getVMax(pathConfig: PathConfig): number {
+	private getVMax(): number {
 		return Math.min(
 			Math.sqrt(
 				(2 * this.arc_length * this.acc * this.acc +
@@ -82,7 +82,7 @@ export default class Spline {
 					this.vEnd * this.vEnd * this.acc) /
 					(this.acc + this.acc)
 			),
-			Math.abs(pathConfig.vMax)
+			Math.abs(this.pathConfig.vMax)
 		);
 	}
 
@@ -105,26 +105,9 @@ export default class Spline {
 	}
 
 	getError(): IllegalSpline | undefined {
-		if (this.startPoint.vMax === 0)
-			return new IllegalSpline(`Can't create spline because vMax is equal to 0!`, `Increase vMax!`);
-
+		if (this.startPoint.vMax === 0) return error.vMaxEqualTo0();
+		if (this.arc_length > 20) return error.splineIsToLong();
 		if (this.vMax < this.vEnd)
-			return new IllegalSpline(
-				`Can't get from v0 (${this.V0}) to vEnd (${this.vEnd}) because vMax` +
-					`(${this.vMax}) is smaller then vEnd (${this.vEnd})!`,
-				`Decrease vEnd or increase vMax!\n` +
-					`Try using vEnd ${this.vMax} or vMax ${this.getVMax(this.pathConfig).toFixed(3)}!`
-			);
-
-		if (new Segment(this.V0, this.vEnd, this.acc).distance > this.arc_length) {
-			const v = Math.sqrt(Math.pow(this.V0, 2) + 2 * this.acc * this.arc_length).toFixed(3);
-			return new IllegalSpline(
-				`Can't get from v0 (${this.V0}) to vEnd (${this.vEnd})!`,
-				`Decrease vEnd! \nTry using vEnd ${v}!`
-			);
-		}
-
-		if (this.arc_length > 20)
-			return new IllegalSpline(`Spline length is to long!`, `Change path waypoints!`);
+			return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
 	}
 }

@@ -1,19 +1,39 @@
 export default class Waypoint {
-	x: number;
-	y: number;
-	v: number;
-	vMax: number;
-	angle: number;
+	protected _angle: number;
+	protected _vMax: number;
+	protected _x: number;
+	protected _y: number;
+	protected _v: number;
 
 	constructor(x: number = 0, y: number = 0, angle: number = 0, v: number = 0, vMax: number = 0) {
-		this.x = x;
-		this.angle = angle;
-		this.vMax = vMax;
-		this.y = y;
-		this.v = v;
+		this._angle = angle;
+		this._vMax = vMax;
+		this._x = x;
+		this._v = v;
+		this._y = y;
+	}
+
+	get x(): number {
+		return this._x;
+	}
+
+	get y(): number {
+		return this._y;
+	}
+
+	get v(): number {
+		return this._v;
+	}
+
+	get vMax(): number {
+		return this._vMax;
+	}
+
+	get angle(): number {
+		return this._angle;
 	}
 
 	getInfo(): string {
-		return `(${this.x},${this.y})`;
+		return `(${this._x},${this._y})`;
 	}
 }

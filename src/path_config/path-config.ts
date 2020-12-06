@@ -1,8 +1,8 @@
 export default class PathConfig {
-	private _acc: number;
-	private _vMax: number;
-	private _width: number;
-	private _robotLoopTime: number;
+	protected _acc: number;
+	protected _vMax: number;
+	protected _width: number;
+	protected _robotLoopTime: number;
 
 	constructor(width: number = 0, vMax: number = 0, acc: number = 0, robotLoopTime: number = 0.02) {
 		this._acc = acc;

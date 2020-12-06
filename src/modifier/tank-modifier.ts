@@ -23,8 +23,8 @@ export default class TankModifier {
 	protected modify(sourceSetpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig): void {
 		const robotWidth = pathConfig.width / 2;
 		for (let i = 0; i < sourceSetpoints.length; i++) {
-			this._leftSetpoints.push(new Setpoint(sourceSetpoints[i]));
-			this._rightSetpoints.push(new Setpoint(sourceSetpoints[i]));
+			this._leftSetpoints.push(Object.assign(new Setpoint(), sourceSetpoints[i]));
+			this._rightSetpoints.push(Object.assign(new Setpoint(), sourceSetpoints[i]));
 			this._leftCoords.push(this.getCoord(coords[i], robotWidth));
 			this._rightCoords.push(this.getCoord(coords[i], -robotWidth));
 			if (i > 0) {

@@ -1,66 +1,66 @@
-import Setpoint from '../setpoint';
 import PathConfig from '../path_config/path-config';
+import Setpoint from '../setpoint';
+import Coord from '../coord';
 
 export default class TankModifier {
-	protected leftSetpoints: Setpoint[] = [];
-	protected rightSetpoints: Setpoint[] = [];
+	protected _leftSetpoints: Setpoint[] = [];
+	protected _rightSetpoints: Setpoint[] = [];
+	protected _leftCoords: Coord[] = [];
+	protected _rightCoords: Coord[] = [];
 
-	constructor(sourceSetpoints: Setpoint[], pathConfig: PathConfig) {
-		this.modify(sourceSetpoints, pathConfig);
+	constructor(sourceSetpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig) {
+		this.modify(sourceSetpoints, coords, pathConfig);
 	}
 
-	getLeftSetpoints(): Setpoint[] {
-		return this.rightSetpoints;
+	get leftSetpoints(): Setpoint[] {
+		return this._rightSetpoints;
 	}
 
-	getRightSetpoints(): Setpoint[] {
-		return this.leftSetpoints;
+	get rightSetpoints(): Setpoint[] {
+		return this._leftSetpoints;
 	}
 
-	protected modify(sourceSetpoints: Setpoint[], pathConfig: PathConfig): void {
+	protected modify(sourceSetpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig): void {
 		const robotWidth = pathConfig.width / 2;
-		var left, right;
 		for (let i = 0; i < sourceSetpoints.length; i++) {
-			left = new Setpoint(sourceSetpoints[i]);
-			right = new Setpoint(sourceSetpoints[i]);
-			this.calculateSetpointCoords(sourceSetpoints[i], left, right, robotWidth);
+			this._leftSetpoints.push(new Setpoint(sourceSetpoints[i]));
+			this._rightSetpoints.push(new Setpoint(sourceSetpoints[i]));
+			this._leftCoords.push(this.getCoord(coords[i], robotWidth));
+			this._rightCoords.push(this.getCoord(coords[i], -robotWidth));
 			if (i > 0) {
-				this.calculateSetpoint(left, this.leftSetpoints[i - 1], pathConfig);
-				this.calculateSetpoint(right, this.rightSetpoints[i - 1], pathConfig);
+				this.calculateSetpoint(this._leftSetpoints, this._leftCoords, i, pathConfig);
+				this.calculateSetpoint(this._rightSetpoints, this._rightCoords, i, pathConfig);
 			}
-			this.rightSetpoints.push(right);
-			this.leftSetpoints.push(left);
 		}
 	}
 
-	protected calculateSetpointCoords(
-		source: Setpoint,
-		left: Setpoint,
-		right: Setpoint,
-		robotWidth: number
-	): void {
-		const cos_angle = Math.cos(source.heading);
-		const sin_angle = Math.sin(source.heading);
-		left.x = source.x - robotWidth * sin_angle;
-		left.y = source.y + robotWidth * cos_angle;
-		right.x = source.x + robotWidth * sin_angle;
-		right.y = source.y - robotWidth * cos_angle;
+	protected getCoord(coord: Coord, robotWidth: number): Coord {
+		const cos_angle = Math.cos(coord.angle);
+		const sin_angle = Math.sin(coord.angle);
+		return new Coord(
+			coord.x - robotWidth * sin_angle,
+			coord.y + robotWidth * cos_angle,
+			coord.angle
+		);
 	}
 
 	protected calculateSetpoint(
-		sideSetpoint: Setpoint,
-		lastSetpoint: Setpoint,
-		config: PathConfig
+		setpoints: Setpoint[],
+		coords: Coord[],
+		index: number,
+		pathConfig: PathConfig
 	): void {
-		var distance = 0,
-			acc;
-		distance = Math.sqrt(
-			(sideSetpoint.x - lastSetpoint.x) * (sideSetpoint.x - lastSetpoint.x) +
-				(sideSetpoint.y - lastSetpoint.y) * (sideSetpoint.y - lastSetpoint.y)
+		const setpoint = setpoints[index];
+		const coord = coords[index];
+		const lastSetpoint = setpoints[index - 1];
+		const lastCoord = coords[index - 1];
+		const distance = Math.sqrt(
+			(coord.x - lastCoord.x) * (coord.x - lastCoord.x) +
+				(coord.y - lastCoord.y) * (coord.y - lastCoord.y)
 		);
-		sideSetpoint.position = lastSetpoint.position + distance;
-		sideSetpoint.velocity = distance / config.robotLoopTime;
-		acc = (sideSetpoint.velocity - lastSetpoint.velocity) / config.robotLoopTime;
-		sideSetpoint.acceleration = Math.abs(acc) > 0 ? (acc / Math.abs(acc)) * config.acc : 0;
+		setpoint.position = lastSetpoint.position + distance;
+		setpoint.velocity = distance / pathConfig.robotLoopTime;
+		const acc = (setpoint.velocity - lastSetpoint.velocity) / pathConfig.robotLoopTime;
+		setpoint.acceleration = Math.abs(acc) > 0 ? (acc / Math.abs(acc)) * pathConfig.acc : 0;
 	}
 }

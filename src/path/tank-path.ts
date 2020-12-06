@@ -13,14 +13,14 @@ export default class TankPath extends Path {
 
 	protected generate(): void {
 		super.generate();
-		this.tankModifier = new TankModifier(this.getSourceSetpoints(), this.pathConfig);
+		this.tankModifier = new TankModifier(this.sourceSetpoints, this.coords, this.pathConfig);
 	}
 
-	getLeftSetpoints(): Setpoint[] {
-		return this.tankModifier.getLeftSetpoints();
+	get leftSetpoints(): Setpoint[] {
+		return this.tankModifier.leftSetpoints;
 	}
 
-	getRightSetpoints(): Setpoint[] {
-		return this.tankModifier.getRightSetpoints();
+	get rightSetpoints(): Setpoint[] {
+		return this.tankModifier.rightSetpoints;
 	}
 }

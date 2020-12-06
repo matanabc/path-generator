@@ -9,14 +9,12 @@ test('Straight path', () => {
 	const path = new Path(waypoints, pathConfig);
 
 	expect(path.isIllegal()).toBe(false);
-	expect(path.getRobotCoords()[0].y).toBe(
-		path.getRobotCoords()[path.getRobotCoords().length - 1].y
-	);
+	expect(path.coords[0].y).toBe(path.coords[path.coords.length - 1].y);
 
-	checkSetpointsSpeed(path.getSourceSetpoints(), pathConfig.vMax);
+	checkSetpointsSpeed(path.sourceSetpoints, pathConfig.vMax);
 	checkLastSetpoint(
-		path.getSourceSetpoints()[path.getSourceSetpoints().length - 1],
-		path.getRobotCoords()[path.getRobotCoords().length - 1],
+		path.sourceSetpoints[path.sourceSetpoints.length - 1],
+		path.coords[path.coords.length - 1],
 		waypoints[waypoints.length - 1]
 	);
 });
@@ -27,10 +25,10 @@ test('Turn path', () => {
 
 	expect(path.isIllegal()).toBe(false);
 
-	checkSetpointsSpeed(path.getSourceSetpoints(), pathConfig.vMax);
+	checkSetpointsSpeed(path.sourceSetpoints, pathConfig.vMax);
 	checkLastSetpoint(
-		path.getSourceSetpoints()[path.getSourceSetpoints().length - 1],
-		path.getRobotCoords()[path.getRobotCoords().length - 1],
+		path.sourceSetpoints[path.sourceSetpoints.length - 1],
+		path.coords[path.coords.length - 1],
 		waypoints[waypoints.length - 1]
 	);
 });
@@ -38,18 +36,18 @@ test('Turn path', () => {
 test('Turn in place path', () => {
 	const waypoints = [new Waypoint(0, 0, 0, 0, 2.5), new Waypoint(0, 0, 90, 0, 0)];
 	const path = new Path(waypoints, pathConfig);
-	const lastCoords = path.getRobotCoords()[path.getRobotCoords().length - 1];
-	const lastSetpoint = path.getSourceSetpoints()[path.getSourceSetpoints().length - 1];
+	const lastCoords = path.coords[path.coords.length - 1];
+	const lastSetpoint = path.sourceSetpoints[path.sourceSetpoints.length - 1];
 
 	expect(path.isIllegal()).toBe(false);
 
 	expect(lastCoords.x).toBeCloseTo(waypoints[1].x);
 	expect(lastCoords.y).toBeCloseTo(waypoints[1].y);
 	expect(lastSetpoint.velocity).toBeCloseTo(waypoints[1].v, 0.05);
-	expect(path.getRobotCoords()[0].x).toBe(path.getRobotCoords()[1].x);
-	expect(path.getRobotCoords()[0].y).toBe(path.getRobotCoords()[1].y);
+	expect(path.coords[0].x).toBe(path.coords[1].x);
+	expect(path.coords[0].y).toBe(path.coords[1].y);
 
-	checkSetpointsSpeed(path.getSourceSetpoints(), pathConfig.vMax);
+	checkSetpointsSpeed(path.sourceSetpoints, pathConfig.vMax);
 });
 
 test('S path', () => {
@@ -62,10 +60,10 @@ test('S path', () => {
 
 	expect(path.isIllegal()).toBe(false);
 
-	checkSetpointsSpeed(path.getSourceSetpoints(), pathConfig.vMax);
+	checkSetpointsSpeed(path.sourceSetpoints, pathConfig.vMax);
 	checkLastSetpoint(
-		path.getSourceSetpoints()[path.getSourceSetpoints().length - 1],
-		path.getRobotCoords()[path.getRobotCoords().length - 1],
+		path.sourceSetpoints[path.sourceSetpoints.length - 1],
+		path.coords[path.coords.length - 1],
 		waypoints[waypoints.length - 1]
 	);
 });

@@ -5,43 +5,43 @@ import Setpoint from '../setpoint';
 import Coord from '../coord';
 
 export default class Path {
-	protected generator: PathGenerator = {} as PathGenerator;
-	protected waypoints: Waypoint[];
-	protected pathConfig: PathConfig;
+	protected _generator: PathGenerator = {} as PathGenerator;
+	protected _waypoints: Waypoint[];
+	protected _pathConfig: PathConfig;
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
-		this.waypoints = waypoints;
-		this.pathConfig = pathConfig;
+		this._waypoints = waypoints;
+		this._pathConfig = pathConfig;
 		this.generate();
 	}
 
 	protected generate(): void {
 		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints))
-			this.generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
-		else this.generator = new PathGenerator(this.waypoints, this.pathConfig);
+			this._generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
+		else this._generator = new PathGenerator(this.waypoints, this.pathConfig);
 	}
 
-	getWaypoints(): Waypoint[] {
-		return this.waypoints;
+	get waypoints(): Waypoint[] {
+		return this._waypoints;
 	}
 
-	getPathConfig(): PathConfig {
-		return this.pathConfig;
+	get pathConfig(): PathConfig {
+		return this._pathConfig;
 	}
 
-	getSourceSetpoints(): Setpoint[] {
-		return this.generator.getSetpoint();
+	get sourceSetpoints(): Setpoint[] {
+		return this._generator.getSetpoint();
 	}
 
-	getRobotCoords(): Coord[] {
-		return this.generator.getCoords();
+	get coords(): Coord[] {
+		return this._generator.getCoords();
+	}
+
+	get error() {
+		return this._generator.getError();
 	}
 
 	isIllegal(): boolean {
-		return this.generator.getError() !== undefined;
-	}
-
-	getError() {
-		return this.generator.getError();
+		return this._generator.getError() !== undefined;
 	}
 }

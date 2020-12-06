@@ -1,4 +1,4 @@
-import PathConfig from '../path_config/path-config';
+import PathConfig from '../path/path-config';
 import IllegalPath from '../errors/illegal-path';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint';

@@ -1,5 +1,5 @@
 import { PathGenerator, TurnInPlaceGenerator } from '../generator/generate';
-import PathConfig from '../path_config/path-config';
+import PathConfig from './path-config';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint';
 import Coord from '../arc/coord';

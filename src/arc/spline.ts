@@ -1,5 +1,5 @@
 import IllegalSpline from '../errors/illegal-spline';
-import PathConfig from '../path_config/path-config';
+import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import * as error from '../errors/error';
 import Coord from './coord';

@@ -1,4 +1,4 @@
-import PathConfig from '../path_config/path-config';
+import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import PathGenerator from './path-generator';
 import * as Util from '../util';

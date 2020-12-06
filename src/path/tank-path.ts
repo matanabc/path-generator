@@ -1,6 +1,6 @@
 import { Setpoint } from '..';
 import TankModifier from '../modifier/tank-modifier';
-import PathConfig from '../path_config/path-config';
+import PathConfig from './path-config';
 import Waypoint from '../waypoints/waypoint';
 import Path from './path';
 

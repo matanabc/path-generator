@@ -1,4 +1,4 @@
-import PathConfig from '../path_config/path-config';
+import PathConfig from '../path/path-config';
 import Setpoint from '../setpoint';
 import Coord from '../arc/coord';
 

@@ -7,16 +7,16 @@ import ArcMath from './arc-math';
 
 export default class Spline {
 	protected _pathConfig: PathConfig;
-	protected _splineMath: ArcMath;
 	protected _startPoint: Waypoint;
 	protected _endPoint: Waypoint;
 	protected _vEnd: number = 0;
 	protected _vMax: number = 0;
 	protected _acc: number = 0;
 	protected _V0: number = 0;
+	protected _arc: ArcMath;
 
 	constructor(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig) {
-		this._splineMath = new ArcMath(startPoint, endPoint, pathConfig);
+		this._arc = new ArcMath(startPoint, endPoint, pathConfig);
 		this._pathConfig = pathConfig;
 		this._startPoint = startPoint;
 		this._endPoint = endPoint;
@@ -43,7 +43,7 @@ export default class Spline {
 	}
 
 	getPositionCoords(pos_relative: number): Coord {
-		return this._splineMath.getPositionCoords(pos_relative);
+		return this._arc.getPositionCoords(pos_relative);
 	}
 
 	getError(): IllegalSpline | undefined {
@@ -66,7 +66,7 @@ export default class Spline {
 	}
 
 	get arc_length(): number {
-		return this._splineMath.arc_length;
+		return this._arc.arc_length;
 	}
 
 	get vMax(): number {

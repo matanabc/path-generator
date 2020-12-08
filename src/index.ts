@@ -1,9 +1,8 @@
 import PathConfig from './path/path-config';
 import Waypoint from './waypoints/waypoint';
-import Setpoint from './setpoint';
+import TankPath from './path/tank-path';
 import * as Util from './util';
 import Path from './path/path';
-import TankPath from './path/tank-path';
 
 const Tank = {
 	Path: TankPath,
@@ -11,4 +10,4 @@ const Tank = {
 	Waypoint,
 };
 
-export { PathConfig, Waypoint, Path, Util, Setpoint, Tank };
+export { PathConfig, Waypoint, Path, Util, Tank };

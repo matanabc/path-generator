@@ -4,7 +4,7 @@ import PathGenerator from './path-generator';
 import * as Util from '../util';
 import Spline from '../spline';
 import Setpoint from '../setpoint';
-import Coord from '../coord';
+import Coord from '../coord/coord';
 
 export default class TurnInPlaceGenerator extends PathGenerator {
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {

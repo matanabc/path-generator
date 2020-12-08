@@ -4,7 +4,7 @@ import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint';
 import Segment from '../segment';
 import Spline from '../spline';
-import Coord from '../coord';
+import Coord from '../coord/coord';
 
 export default class PathGenerator {
 	protected pathConfig: PathConfig;

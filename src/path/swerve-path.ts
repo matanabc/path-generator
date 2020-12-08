@@ -1,16 +1,16 @@
 import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
 import SwervePathGenerator from '../generator/swerve-path-generator';
+import SwerveWaypoint from '../waypoints/swerve-waypoint';
 import SwerveSetpoint from '../setpoint/swerve-setpoint';
 import SwerveModifier from '../modifier/swerve-modifier';
 import SwerveCoord from '../coord/swerve-coord';
-import Waypoint from '../waypoints/waypoint';
 import PathConfig from './path-config';
 import Path from './path';
 
 export default class SwervePath extends Path {
 	protected modifier: SwerveModifier = {} as SwerveModifier;
 
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
+	constructor(waypoints: SwerveWaypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
 	}
 

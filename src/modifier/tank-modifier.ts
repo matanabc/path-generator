@@ -1,5 +1,5 @@
 import PathConfig from '../path/path-config';
-import Setpoint from '../setpoint';
+import Setpoint from '../setpoint/setpoint';
 import Coord from '../coord/coord';
 
 export default class TankModifier {

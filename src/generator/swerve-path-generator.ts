@@ -3,7 +3,7 @@ import PathGenerator from './path-generator';
 import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import Coord from '../coord/coord';
-import Setpoint from '../setpoint';
+import Setpoint from '../setpoint/setpoint';
 import Spline from '../spline';
 import { d2r } from '../util';
 

@@ -2,7 +2,7 @@ import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
 import PathGenerator from '../generator/path-generator';
 import Waypoint from '../waypoints/waypoint';
 import PathConfig from './path-config';
-import Setpoint from '../setpoint';
+import Setpoint from '../setpoint/setpoint';
 import Coord from '../coord/coord';
 
 export default class Path {

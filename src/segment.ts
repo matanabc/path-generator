@@ -1,4 +1,4 @@
-import Setpoint from './setpoint';
+import Setpoint from './setpoint/setpoint';
 
 export default class Segment {
 	private _totalTime: number = 0;

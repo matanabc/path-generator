@@ -33,7 +33,7 @@ export default class Spline {
 	private getVMax(): number {
 		return Math.min(
 			Math.sqrt(
-				(2 * this.arc_length * this.acc * this.acc +
+				(2 * this.distance * this.acc * this.acc +
 					this.V0 * this.V0 * this.acc +
 					this.vEnd * this.vEnd * this.acc) /
 					(this.acc + this.acc)
@@ -48,7 +48,7 @@ export default class Spline {
 
 	getError(): IllegalSpline | undefined {
 		if (this.startPoint.vMax === 0) return error.vMaxEqualTo0();
-		if (this.arc_length > 20) return error.splineIsToLong();
+		if (this.distance > 20) return error.splineIsToLong();
 		if (this.vMax < this.vEnd)
 			return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
 	}
@@ -65,7 +65,7 @@ export default class Spline {
 		return this._endPoint;
 	}
 
-	get arc_length(): number {
+	get distance(): number {
 		return this._arc.arc_length;
 	}
 

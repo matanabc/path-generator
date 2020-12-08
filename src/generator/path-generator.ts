@@ -31,7 +31,7 @@ export default class PathGenerator {
 			const segments = this.generateSegments(spline);
 			const setpoints = this.generateSetpoints(spline, segments, lastPosition);
 			const coords = this.generateCoords(spline, setpoints, lastPosition);
-			lastPosition += spline.arc_length;
+			lastPosition += spline.distance;
 			this.setpoints.push(...setpoints);
 			this.segments.push(...segments);
 			this.coords.push(...coords);
@@ -56,7 +56,7 @@ export default class PathGenerator {
 		const speedingAndSlowingDistance = speeding2vMax.distance + slowing2vEnd.distance;
 		const segments = [];
 		segments.push(speeding2vMax);
-		segments.push(new Segment(spline.vMax, spline.arc_length - speedingAndSlowingDistance));
+		segments.push(new Segment(spline.vMax, spline.distance - speedingAndSlowingDistance));
 		segments.push(slowing2vEnd);
 		return segments;
 	}

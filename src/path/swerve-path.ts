@@ -1,4 +1,5 @@
-import { SwervePathGenerator, TurnInPlaceGenerator } from '../generator/generate';
+import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
+import SwervePathGenerator from '../generator/swerve-path-generator';
 import Waypoint from '../waypoints/waypoint';
 import PathConfig from './path-config';
 import Path from './path';

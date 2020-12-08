@@ -1,7 +1,7 @@
 import SwerveCoord from '../coord/swerve-coord';
+import PathGenerator from './path-generator';
 import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
-import { PathGenerator } from './generate';
 import Coord from '../coord/coord';
 import Setpoint from '../setpoint';
 import Spline from '../spline';

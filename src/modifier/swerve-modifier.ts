@@ -10,8 +10,8 @@ export default class SwerveModifier {
 	protected _backRightSetpoints: SwerveSetpoint[] = [];
 	protected _backLeftSetpoints: SwerveSetpoint[] = [];
 
-	constructor(sourceSetpoints: Setpoint[], coords: SwerveCoord[], pathConfig: PathConfig) {
-		this.modify(sourceSetpoints, coords, pathConfig);
+	constructor(source: Setpoint[], coords: SwerveCoord[], pathConfig: PathConfig) {
+		this.modify(source, coords, pathConfig);
 	}
 
 	get frontRightSetpoints(): SwerveSetpoint[] {

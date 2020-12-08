@@ -1,6 +1,6 @@
 import { Path, Waypoint, PathConfig, Util } from '../index';
-import Setpoint from '../setpoint';
-import Coord from '../coord';
+import Setpoint from '../setpoint/setpoint';
+import Coord from '../coord/coord';
 
 const pathConfig = new PathConfig(0.8, 2, 3);
 

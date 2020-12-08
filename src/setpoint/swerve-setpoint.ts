@@ -16,4 +16,8 @@ export default class SwerveSetpoint extends Setpoint {
 	get angle(): number {
 		return this._angle;
 	}
+
+	set angle(angle: number) {
+		this._angle = angle;
+	}
 }

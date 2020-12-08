@@ -3,7 +3,7 @@ import Waypoint from '../waypoints/waypoint';
 import { boundRadians, d2r } from '../util';
 import Coord from './coord';
 
-export default class ArcMath {
+export default class Arc {
 	protected sampleCount: number = 100000;
 	protected knot_distance: number = 0;
 	protected angle_offset: number = 0;

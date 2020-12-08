@@ -3,7 +3,7 @@ import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import * as error from '../errors/error';
 import Coord from './coord';
-import ArcMath from './arc-math';
+import Arc from './arc';
 
 export default class Spline {
 	protected _pathConfig: PathConfig;
@@ -13,10 +13,10 @@ export default class Spline {
 	protected _vMax: number = 0;
 	protected _acc: number = 0;
 	protected _V0: number = 0;
-	protected _arc: ArcMath;
+	protected _arc: Arc;
 
 	constructor(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig) {
-		this._arc = new ArcMath(startPoint, endPoint, pathConfig);
+		this._arc = new Arc(startPoint, endPoint, pathConfig);
 		this._pathConfig = pathConfig;
 		this._startPoint = startPoint;
 		this._endPoint = endPoint;

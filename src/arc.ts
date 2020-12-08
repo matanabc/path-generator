@@ -1,6 +1,6 @@
-import PathConfig from '../path/path-config';
-import Waypoint from '../waypoints/waypoint';
-import { boundRadians, d2r } from '../util';
+import PathConfig from './path/path-config';
+import Waypoint from './waypoints/waypoint';
+import { boundRadians, d2r } from './util';
 import Coord from './coord';
 
 export default class Arc {

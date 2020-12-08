@@ -1,6 +1,6 @@
 import PathConfig from '../path/path-config';
 import Setpoint from '../setpoint';
-import Coord from '../arc/coord';
+import Coord from '../coord';
 
 export default class TankModifier {
 	protected _leftSetpoints: Setpoint[] = [];

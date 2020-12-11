@@ -8,21 +8,17 @@ import PathConfig from './path-config';
 import Path from './path';
 
 export default class SwervePath extends Path {
-	protected modifier: SwerveModifier = {} as SwerveModifier;
+	protected modifier: SwerveModifier = new SwerveModifier();
 
 	constructor(waypoints: SwerveWaypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
+		this.modifier.modify(this.sourceSetpoints, <SwerveCoord[]>this.coords, this.pathConfig);
 	}
 
 	protected generate(): void {
 		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints))
 			this._generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
 		else this._generator = new SwervePathGenerator(this.waypoints, this.pathConfig);
-		this.modifier = new SwerveModifier(
-			this.sourceSetpoints,
-			<SwerveCoord[]>this.coords,
-			this.pathConfig
-		);
 	}
 
 	get frontRightSetpoints(): SwerveSetpoint[] {

@@ -42,4 +42,24 @@ export default class SwerveModifier {
 			this._backLeftSetpoints.push(Object.assign(new SwerveSetpoint(), setpoint));
 		}
 	}
+
+	protected getSetpoint(
+		source: Setpoint,
+		coord: SwerveCoord,
+		width: number,
+		scale: number
+	): SwerveSetpoint {
+		const object = {
+			...source,
+			angle: Util.r2d(Util.boundRadians(coord.angle)),
+		};
+		const setpoint = Object.assign(new SwerveSetpoint(), object);
+		const ratio = coord.radios === 0 ? 0 : width / (2 * coord.radios);
+		setpoint.angle = Util.r2d(Util.boundRadians(coord.angle));
+		setpoint.angle += Util.r2d((ratio * 2 * setpoint.position) / width);
+		setpoint.acceleration *= 1 + ratio * scale;
+		setpoint.position *= 1 + ratio * scale;
+		setpoint.velocity *= 1 + ratio * scale;
+		return setpoint;
+	}
 }

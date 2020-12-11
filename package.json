@@ -15,7 +15,7 @@
 		"motion profile"
 	],
 	"scripts": {
-		"test": "jest --config jestconfig.json",
+		"test": "jest --config jest.config.js",
 		"build": "tsc",
 		"prepare": "npm run build",
 		"prepublishOnly": "npm test",

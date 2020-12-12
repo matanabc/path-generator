@@ -5,6 +5,13 @@ export default class Waypoint {
 	protected _y: number;
 	protected _v: number;
 
+	/**
+	 * @param x				Waypoint X
+	 * @param y				Waypoint Y
+	 * @param angle 		Waypoint angle
+	 * @param v 			Robot velocity
+	 * @param vMax 			Max velocity to next waypoint
+	 */
 	constructor(x: number = 0, y: number = 0, angle: number = 0, v: number = 0, vMax: number = 0) {
 		this._angle = angle;
 		this._vMax = vMax;

@@ -4,6 +4,12 @@ export default class PathConfig {
 	protected _width: number;
 	protected _robotLoopTime: number;
 
+	/**
+	 * @param width				Robot width
+	 * @param vMax				Robot max velocity
+	 * @param acc				Robot acceleration
+	 * @param robotLoopTime		Robot loop time
+	 */
 	constructor(width: number = 0, vMax: number = 0, acc: number = 0, robotLoopTime: number = 0.02) {
 		this._acc = acc;
 		this._vMax = vMax;

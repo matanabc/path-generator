@@ -6,41 +6,26 @@ import SwerveModifier from '../modifier/swerve-modifier';
 import SwerveCoord from '../coord/swerve-coord';
 import PathConfig from './path-config';
 import Coord from '../coord/coord';
-import { d2r } from '../util';
 import Path from './path';
 
 export default class SwervePath extends Path {
-	protected modifier: SwerveModifier = new SwerveModifier();
+	protected modifier: SwerveModifier;
 	protected _coords: Coord[] = [];
 
 	constructor(waypoints: SwerveWaypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
-		this.modifier.modify(
+		this.modifier = new SwerveModifier(
 			this.sourceSetpoints,
 			<SwerveCoord[]>this._generator.getCoords(),
-			this.pathConfig
+			this.pathConfig,
+			(<SwerveWaypoint>this.waypoints[0]).robotAngle
 		);
-		this.updateCoordAngle();
 	}
 
 	protected generate(): void {
 		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints))
 			this._generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
 		else this._generator = new SwervePathGenerator(this.waypoints, this.pathConfig);
-	}
-
-	protected updateCoordAngle(): void {
-		const coords = <SwerveCoord[]>this._generator.getCoords();
-		var angle = d2r((<SwerveWaypoint>this.waypoints[0]).robotAngle);
-		const width = this.pathConfig.width;
-		const source = this.sourceSetpoints;
-		for (let i = 0; i < coords.length; i++) {
-			const ratio = coords[i].radios === 0 ? 0 : width / (2 * coords[i].radios);
-			const distance = i === 0 ? source[i].position : source[i].position - source[i - 1].position;
-			angle += (ratio * 2 * distance) / width;
-			coords[i].angle = angle;
-		}
-		this._coords.push(...coords);
 	}
 
 	get frontRightSetpoints(): SwerveSetpoint[] {
@@ -60,6 +45,6 @@ export default class SwervePath extends Path {
 	}
 
 	get coords(): Coord[] {
-		return this._coords;
+		return this.modifier.robotCoord;
 	}
 }

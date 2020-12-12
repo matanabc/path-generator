@@ -6,7 +6,7 @@ This package is based of [Jaci's PathFinder](https://github.com/JacisNonsense/Pa
 
 ## Usage
 
-### Without modifier
+### Basic
 
 ```typescript
 const { Waypoint, PathConfig, Path } = require('path-generator');
@@ -20,10 +20,11 @@ const pathConfig = new PathConfig(0.8, 3.5, 3);
 const path = new Path(waypoints, pathConfig);
 ```
 
-### With modifier
+### Tank
 
 ```typescript
-const { Waypoint, PathConfig, Path, Modifier } = require('path-generator');
+const { Tank } = require('path-generator');
+const { Path, PathConfig, Waypoint } = Tank;
 
 const waypoints = [
 	new Waypoint(0, 0, 0, 0, 2),
@@ -31,28 +32,20 @@ const waypoints = [
 	new Waypoint(3, 3, 0, 0, 0),
 ];
 const pathConfig = new PathConfig(0.8, 3.5, 3);
-const path = new Path(waypoints, pathConfig, Modifier.tank);
+const path = new Path(waypoints, pathConfig);
 ```
 
-## Modifier Options
+### Swerve
 
-- Tank:
-  - `Modifier.tank`
-- IModifier:
+```typescript
+const { Swerve } = require('path-generator');
+const { Path, PathConfig, Waypoint } = Swerve;
 
-  - `Modifier.IModifier`
-  - Implements this interface to create your own modifier, **Not tested on JS!**
-
-  ```typescript
-  import { Modifier } from 'path-generator';
-
-  export default class ModifierName implements Modifier.IModifier<ModifyName> {
-    modify(sourceSetpoints: Setpoint[], pathConfig: PathConfig): ModifyName {
-  	  return new ModifyName(...);
-    }
-  }
-
-  class ModifyName {
-    ...
-  }
-  ```
+const waypoints = [
+	new Waypoint(0, 0, 0, 0, 0, 2),
+	new Waypoint(1.5, 1.5, 90, 0, 2, 2),
+	new Waypoint(3, 3, 0, 180, 0, 0),
+];
+const pathConfig = new PathConfig(0.8, 3.5, 3);
+const path = new Path(waypoints, pathConfig);
+```

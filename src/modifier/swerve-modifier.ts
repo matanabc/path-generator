@@ -10,8 +10,10 @@ export default class SwerveModifier {
 	protected _frontLeftSetpoints: SwerveSetpoint[] = [];
 	protected _backRightSetpoints: SwerveSetpoint[] = [];
 	protected _backLeftSetpoints: SwerveSetpoint[] = [];
+	protected _pathConfig: PathConfig;
 	protected _coords: Coord[] = [];
-	protected angle = 0;
+	protected _startAngle: number;
+	protected _angle: number;
 
 	get frontRightSetpoints(): SwerveSetpoint[] {
 		return this._frontRightSetpoints;
@@ -39,50 +41,51 @@ export default class SwerveModifier {
 		pathConfig: PathConfig,
 		startAngle: number
 	) {
-		this.modify(source, coords, pathConfig, startAngle);
+		this._angle = 0;
+		this._pathConfig = pathConfig;
+		this._startAngle = startAngle;
+		this.modify(source, coords);
 	}
 
-	protected modify(
-		source: Setpoint[],
-		coords: SwerveCoord[],
-		pathConfig: PathConfig,
-		startAngle: number
-	): void {
-		this.angle = 0;
+	protected modify(source: Setpoint[], coords: SwerveCoord[]): void {
 		for (let i = 0; i < source.length; i++) {
-			this._frontRightSetpoints.push(this.getSetpoint(source, coords, i, pathConfig.width, -1));
-			// this._frontLeftSetpoints.push(this.getSetpoint(source[i], coords[i], pathConfig.width, 1));
-			// this._backRightSetpoints.push(this.getSetpoint(source[i], coords[i], pathConfig.width, -1));
-			// this._backLeftSetpoints.push(this.getSetpoint(source[i], coords[i], pathConfig.width, 1));
-			this.setCoord(coords[i], startAngle);
+			const ratio = this.getRatio(coords[i]);
+			this.updateAngle(source, ratio, i);
+			const rightSetpoint = this.getSetpoint(source[i], coords[i], -ratio);
+			const leftSetpoint = this.getSetpoint(source[i], coords[i], ratio);
+			this._frontRightSetpoints.push(rightSetpoint);
+			this._backRightSetpoints.push(rightSetpoint);
+			this._frontLeftSetpoints.push(leftSetpoint);
+			this._backLeftSetpoints.push(leftSetpoint);
+			this.setCoord(coords[i]);
 		}
 	}
 
-	protected getSetpoint(
-		source: Setpoint[],
-		coords: SwerveCoord[],
-		index: number,
-		width: number,
-		scale: number
-	): SwerveSetpoint {
-		const coord = coords[index];
-		const object = {
-			...source[index],
-			angle: Util.r2d(Util.boundRadians(coord.angle)),
-		};
-		const setpoint = Object.assign(new SwerveSetpoint(), object);
-		const ratio = coord.radios === 0 ? 0 : width / (2 * coord.radios);
-		const distance =
-			index === 0 ? setpoint.position : setpoint.position - source[index - 1].position;
-		this.angle += Util.r2d((ratio * 2 * distance) / width);
-		setpoint.angle += -this.angle;
-		setpoint.acceleration *= 1 + ratio * scale;
-		setpoint.position *= 1 + ratio * scale;
-		setpoint.velocity *= 1 + ratio * scale;
+	protected getRatio(coord: SwerveCoord): number {
+		return coord.radios === 0 ? 0 : this._pathConfig.width / (2 * coord.radios);
+	}
+
+	protected updateAngle(source: Setpoint[], ratio: number, index: number): void {
+		const position = source[index].position;
+		const distance = index > 0 ? position - source[index - 1].position : position;
+		this._angle += Util.r2d((ratio * 2 * distance) / this._pathConfig.width);
+	}
+
+	protected getSetpoint(source: Setpoint, coord: SwerveCoord, ratio: number): SwerveSetpoint {
+		const setpoint = new SwerveSetpoint(
+			source.position,
+			source.velocity,
+			source.acceleration,
+			Util.r2d(Util.boundRadians(coord.angle))
+		);
+		setpoint.angle += -this._angle;
+		setpoint.acceleration *= 1 + ratio;
+		setpoint.position *= 1 + ratio;
+		setpoint.velocity *= 1 + ratio;
 		return setpoint;
 	}
 
-	protected setCoord(coord: SwerveCoord, startAngle: number): void {
-		this._coords.push(new Coord(coord.x, coord.y, Util.d2r(startAngle + this.angle)));
+	protected setCoord(coord: SwerveCoord): void {
+		this._coords.push(new Coord(coord.x, coord.y, Util.d2r(this._startAngle + this._angle)));
 	}
 }

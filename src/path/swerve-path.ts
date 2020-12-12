@@ -31,11 +31,14 @@ export default class SwervePath extends Path {
 
 	protected updateCoordAngle(): void {
 		const coords = <SwerveCoord[]>this._generator.getCoords();
-		const startAngle = d2r((<SwerveWaypoint>this.waypoints[0]).robotAngle);
+		var angle = d2r((<SwerveWaypoint>this.waypoints[0]).robotAngle);
 		const width = this.pathConfig.width;
+		const source = this.sourceSetpoints;
 		for (let i = 0; i < coords.length; i++) {
 			const ratio = coords[i].radios === 0 ? 0 : width / (2 * coords[i].radios);
-			coords[i].angle = startAngle + (ratio * 2 * this.sourceSetpoints[i].position) / width;
+			const distance = i === 0 ? source[i].position : source[i].position - source[i - 1].position;
+			angle += (ratio * 2 * distance) / width;
+			coords[i].angle = angle;
 		}
 		this._coords.push(...coords);
 	}

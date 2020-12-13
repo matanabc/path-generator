@@ -8,7 +8,7 @@ This package is based of [Jaci's PathFinder](https://github.com/JacisNonsense/Pa
 
 ### Basic
 
-```typescript
+```javascript
 const { Waypoint, PathConfig, Path } = require('path-generator');
 
 const waypoints = [
@@ -22,7 +22,7 @@ const path = new Path(waypoints, pathConfig);
 
 ### Tank
 
-```typescript
+```javascript
 const { Tank } = require('path-generator');
 const { Path, PathConfig, Waypoint } = Tank;
 
@@ -37,7 +37,7 @@ const path = new Path(waypoints, pathConfig);
 
 ### Swerve
 
-```typescript
+```javascript
 const { Swerve } = require('path-generator');
 const { Path, PathConfig, Waypoint } = Swerve;
 
@@ -49,3 +49,7 @@ const waypoints = [
 const pathConfig = new PathConfig(0.8, 3.5, 3);
 const path = new Path(waypoints, pathConfig);
 ```
+
+- **Note**:
+  - Each path `setpoint.angle` start at 0!
+  - Not tested on a robot yet!

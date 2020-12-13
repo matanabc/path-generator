@@ -1,7 +1,7 @@
 import Waypoint from './waypoint';
 
 export default class SwerveWaypoint extends Waypoint {
-	protected _robotAngle: number;
+	public robotAngle: number;
 
 	/**
 	 * @param x				Waypoint X
@@ -20,10 +20,6 @@ export default class SwerveWaypoint extends Waypoint {
 		vMax: number = 0
 	) {
 		super(x, y, angle, v, vMax);
-		this._robotAngle = robotAngle;
-	}
-
-	get robotAngle(): number {
-		return this._robotAngle;
+		this.robotAngle = robotAngle;
 	}
 }

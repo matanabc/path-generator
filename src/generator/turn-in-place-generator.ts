@@ -17,6 +17,7 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 
 		super([startWaypoint, endWaypoint], pathConfig);
 		this._turnInPlaceAngle = turnAngle;
+		this.updateCoord(waypoints[0].angle);
 	}
 
 	protected generateCoords(spline: Spline, setpoints: Setpoint[], startPosition: number): Coord[] {
@@ -26,10 +27,17 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 				new Coord(
 					spline.startPoint.x,
 					spline.startPoint.y,
-					Util.distance2Angle(setpoints[i].position, spline.pathConfig.width)
+					Util.d2r(Util.distance2Angle(setpoints[i].position, spline.pathConfig.width))
 				)
 			);
 		return coords;
+	}
+
+	protected updateCoord(startAngle: number): void {
+		for (let i = 0; i < this.coords.length; i++) {
+			this.coords[i].angle *= Math.sign(this._turnInPlaceAngle);
+			this.coords[i].angle += Util.d2r(startAngle);
+		}
 	}
 
 	public static isTurnInPlace(waypoints: Waypoint[]): boolean {

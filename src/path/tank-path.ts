@@ -9,7 +9,12 @@ export default class TankPath extends Path {
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
-		this.modifier = new TankModifier(this.sourceSetpoints, this.coords, this.pathConfig);
+		this.modifier = new TankModifier(
+			this.sourceSetpoints,
+			this.coords,
+			this.pathConfig,
+			this._turnInPlaceAngle
+		);
 	}
 
 	get leftSetpoints(): Setpoint[] {

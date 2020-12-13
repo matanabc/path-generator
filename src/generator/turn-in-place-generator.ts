@@ -7,17 +7,16 @@ import Setpoint from '../setpoint/setpoint';
 import Coord from '../coord/coord';
 
 export default class TurnInPlaceGenerator extends PathGenerator {
+	protected _turnInPlaceAngle: number;
+
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		const turnAngle = waypoints[1].angle - waypoints[0].angle;
 		const x = waypoints[0].x + Util.angle2Distance(turnAngle, pathConfig.width);
-		const y = waypoints[0].y;
-		const v0 = waypoints[0].v;
-		const vEnd = waypoints[1].v;
-		const vMax = waypoints[0].vMax;
-		const startWaypoint = new Waypoint(waypoints[0].x, y, 0, v0, vMax);
-		const endWaypoint = new Waypoint(x, y, 0, vEnd, 0);
+		const startWaypoint = new Waypoint(waypoints[0].x, waypoints[0].y, 0, 0, waypoints[0].vMax);
+		const endWaypoint = new Waypoint(x, waypoints[0].y, 0, 0, 0);
 
 		super([startWaypoint, endWaypoint], pathConfig);
+		this._turnInPlaceAngle = turnAngle;
 	}
 
 	protected generateCoords(spline: Spline, setpoints: Setpoint[], startPosition: number): Coord[] {
@@ -39,5 +38,9 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 			waypoints[0].x === waypoints[1].x &&
 			waypoints[0].y === waypoints[1].y
 		);
+	}
+
+	get turnAngle(): number {
+		return this._turnInPlaceAngle;
 	}
 }

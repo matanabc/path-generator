@@ -8,8 +8,14 @@ export default class TankModifier {
 	protected _leftCoords: Coord[] = [];
 	protected _rightCoords: Coord[] = [];
 
-	constructor(sourceSetpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig) {
-		this.modify(sourceSetpoints, coords, pathConfig);
+	constructor(
+		source: Setpoint[],
+		coords: Coord[],
+		pathConfig: PathConfig,
+		turnInPlaceAngle: number
+	) {
+		if (turnInPlaceAngle === 0) this.modify(source, coords, pathConfig);
+		else this.turnInPlaceModify(source, turnInPlaceAngle);
 	}
 
 	get leftSetpoints(): Setpoint[] {
@@ -20,11 +26,27 @@ export default class TankModifier {
 		return this._leftSetpoints;
 	}
 
-	protected modify(sourceSetpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig): void {
+	protected turnInPlaceModify(source: Setpoint[], turnInPlaceAngle: number): void {
+		const scale = turnInPlaceAngle > 0 ? 1 : -1;
+		for (let i = 0; i < source.length; i++) {
+			this._rightSetpoints.push(Object.assign(new Setpoint(), source[i]));
+			this._leftSetpoints.push(Object.assign(new Setpoint(), source[i]));
+			this.scale(this._rightSetpoints[i], -scale);
+			this.scale(this._leftSetpoints[i], scale);
+		}
+	}
+
+	protected scale(source: Setpoint, scale: number): void {
+		source.acceleration *= scale;
+		source.position *= scale;
+		source.velocity *= scale;
+	}
+
+	protected modify(source: Setpoint[], coords: Coord[], pathConfig: PathConfig): void {
 		const robotWidth = pathConfig.width / 2;
-		for (let i = 0; i < sourceSetpoints.length; i++) {
-			this._leftSetpoints.push(Object.assign(new Setpoint(), sourceSetpoints[i]));
-			this._rightSetpoints.push(Object.assign(new Setpoint(), sourceSetpoints[i]));
+		for (let i = 0; i < source.length; i++) {
+			this._leftSetpoints.push(Object.assign(new Setpoint(), source[i]));
+			this._rightSetpoints.push(Object.assign(new Setpoint(), source[i]));
 			this._leftCoords.push(this.getCoord(coords[i], robotWidth));
 			this._rightCoords.push(this.getCoord(coords[i], -robotWidth));
 			if (i > 0) {

@@ -19,9 +19,17 @@ export default class Path {
 
 	protected generate(): void {
 		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints)) {
-			this._generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
+			this._generator = this.generateTurnInPlacePath();
 			this._turnInPlaceAngle = (<TurnInPlaceGenerator>this._generator).turnAngle;
-		} else this._generator = new PathGenerator(this.waypoints, this.pathConfig);
+		} else this._generator = this.generatePath();
+	}
+
+	protected generatePath(): PathGenerator {
+		return new PathGenerator(this.waypoints, this.pathConfig);
+	}
+
+	protected generateTurnInPlacePath(): PathGenerator {
+		return new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
 	}
 
 	get waypoints(): Waypoint[] {

@@ -1,8 +1,8 @@
-import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
 import SwervePathGenerator from '../generator/swerve-path-generator';
 import SwerveWaypoint from '../waypoints/swerve-waypoint';
 import SwerveSetpoint from '../setpoint/swerve-setpoint';
 import SwerveModifier from '../modifier/swerve-modifier';
+import PathGenerator from '../generator/path-generator';
 import SwerveCoord from '../coord/swerve-coord';
 import PathConfig from './path-config';
 import Coord from '../coord/coord';
@@ -22,11 +22,8 @@ export default class SwervePath extends Path {
 		);
 	}
 
-	protected generate(): void {
-		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints)) {
-			this._generator = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
-			this._turnInPlaceAngle = (<TurnInPlaceGenerator>this._generator).turnAngle;
-		} else this._generator = new SwervePathGenerator(this.waypoints, this.pathConfig);
+	protected generatePath(): PathGenerator {
+		return new SwervePathGenerator(this.waypoints, this.pathConfig);
 	}
 
 	get frontRightSetpoints(): SwerveSetpoint[] {

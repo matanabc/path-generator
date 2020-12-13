@@ -50,7 +50,7 @@ export default class SwerveModifier {
 	}
 
 	protected turnInPlaceModify(source: Setpoint[], turnAngle: number, coords: SwerveCoord[]): void {
-		this._coords = coords;
+		this._coords.push(...coords);
 		const scale = turnAngle > 0 ? 1 : -1;
 		for (let i = 0; i < source.length; i++) {
 			const rightSetpoint = new SwerveSetpoint(

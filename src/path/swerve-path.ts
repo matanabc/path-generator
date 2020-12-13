@@ -18,7 +18,8 @@ export default class SwervePath extends Path {
 			this.sourceSetpoints,
 			<SwerveCoord[]>this._generator.getCoords(),
 			this.pathConfig,
-			(<SwerveWaypoint>this.waypoints[0]).robotAngle
+			(<SwerveWaypoint>this.waypoints[0]).robotAngle,
+			this._turnInPlaceAngle
 		);
 	}
 

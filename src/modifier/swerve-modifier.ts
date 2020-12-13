@@ -39,12 +39,35 @@ export default class SwerveModifier {
 		source: Setpoint[],
 		coords: SwerveCoord[],
 		pathConfig: PathConfig,
-		startAngle: number
+		startAngle: number,
+		turnInPlaceAngle: number
 	) {
 		this._angle = 0;
 		this._pathConfig = pathConfig;
 		this._startAngle = startAngle;
-		this.modify(source, coords);
+		if (turnInPlaceAngle === 0) this.modify(source, coords);
+		else this.turnInPlaceModify(source, turnInPlaceAngle, coords);
+	}
+
+	protected turnInPlaceModify(source: Setpoint[], turnAngle: number, coords: SwerveCoord[]): void {
+		this._coords = coords;
+		const scale = turnAngle > 0 ? 1 : -1;
+		for (let i = 0; i < source.length; i++) {
+			const rightSetpoint = new SwerveSetpoint(
+				source[i].position * -scale,
+				source[i].velocity * -scale,
+				source[i].acceleration * -scale
+			);
+			const leftSetpoint = new SwerveSetpoint(
+				source[i].position * scale,
+				source[i].velocity * scale,
+				source[i].acceleration * scale
+			);
+			this._frontRightSetpoints.push(rightSetpoint);
+			this._backRightSetpoints.push(rightSetpoint);
+			this._frontLeftSetpoints.push(leftSetpoint);
+			this._backLeftSetpoints.push(leftSetpoint);
+		}
 	}
 
 	protected modify(source: Setpoint[], coords: SwerveCoord[]): void {

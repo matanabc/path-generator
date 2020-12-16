@@ -1,7 +1,7 @@
 import Setpoint from './setpoint';
 
 export default class SwerveSetpoint extends Setpoint {
-	protected _angle: number;
+	public angle: number;
 
 	constructor(
 		position: number = 0,
@@ -10,14 +10,6 @@ export default class SwerveSetpoint extends Setpoint {
 		angle: number = 0
 	) {
 		super(position, velocity, acceleration);
-		this._angle = angle;
-	}
-
-	get angle(): number {
-		return this._angle;
-	}
-
-	set angle(angle: number) {
-		this._angle = angle;
+		this.angle = angle;
 	}
 }

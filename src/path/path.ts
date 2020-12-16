@@ -8,6 +8,7 @@ import Coord from '../coord/coord';
 export default class Path {
 	protected _generator: PathGenerator = {} as PathGenerator;
 	protected _turnInPlaceAngle: number = 0;
+	protected _isReverse: boolean = false;
 	protected _pathConfig: PathConfig;
 	protected _waypoints: Waypoint[];
 
@@ -54,5 +55,15 @@ export default class Path {
 
 	isIllegal(): boolean {
 		return this._generator.getError() !== undefined;
+	}
+
+	isReverse(): boolean {
+		return this._isReverse;
+	}
+
+	changeDirection(): void {
+		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints)) return;
+		this._isReverse = !this._isReverse;
+		for (let i = 0; i < this.sourceSetpoints.length; i++) this.sourceSetpoints[i].changeDirection();
 	}
 }

@@ -1,8 +1,8 @@
 export default class PathConfig {
-	protected _acc: number;
-	protected _vMax: number;
-	protected _width: number;
-	protected _robotLoopTime: number;
+	public acc: number;
+	public vMax: number;
+	public width: number;
+	public robotLoopTime: number;
 
 	/**
 	 * @param width				Robot width
@@ -11,25 +11,9 @@ export default class PathConfig {
 	 * @param robotLoopTime		Robot loop time
 	 */
 	constructor(width: number = 0, vMax: number = 0, acc: number = 0, robotLoopTime: number = 0.02) {
-		this._acc = acc;
-		this._vMax = vMax;
-		this._width = width;
-		this._robotLoopTime = robotLoopTime;
-	}
-
-	get acc(): number {
-		return this._acc;
-	}
-
-	get vMax(): number {
-		return this._vMax;
-	}
-
-	get width(): number {
-		return this._width;
-	}
-
-	get robotLoopTime(): number {
-		return this._robotLoopTime;
+		this.acc = acc;
+		this.vMax = vMax;
+		this.width = width;
+		this.robotLoopTime = robotLoopTime;
 	}
 }

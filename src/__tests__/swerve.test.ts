@@ -128,3 +128,8 @@ test('Turn in place path left', () => {
 	expect(Util.r2d(path.coords[path.coords.length - 1].angle)).toBeCloseTo(waypoints[1].angle, 0.05);
 	checkSetpoint(path.frontRightSetpoints, path.frontLeftSetpoints);
 });
+
+test('Path with no waypoints', () => {
+	const path = new Path([], pathConfig);
+	basicPathCheck(path);
+});

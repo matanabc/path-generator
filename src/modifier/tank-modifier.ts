@@ -31,8 +31,8 @@ export default class TankModifier {
 		for (let i = 0; i < source.length; i++) {
 			this._rightSetpoints.push(Object.assign(new Setpoint(), source[i]));
 			this._leftSetpoints.push(Object.assign(new Setpoint(), source[i]));
-			this.scale(this._rightSetpoints[i], -scale);
-			this.scale(this._leftSetpoints[i], scale);
+			this.scale(this._rightSetpoints[i], scale);
+			this.scale(this._leftSetpoints[i], -scale);
 		}
 	}
 

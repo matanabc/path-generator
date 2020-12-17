@@ -57,6 +57,10 @@ export default class Path {
 		return this._generator.getError() !== undefined;
 	}
 
+	isTurnInPlace(): boolean {
+		return this._turnInPlaceAngle !== 0;
+	}
+
 	isReverse(): boolean {
 		return this._isReverse;
 	}

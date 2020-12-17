@@ -22,11 +22,12 @@ export default class SwervePath extends Path {
 	}
 
 	protected modify(): void {
+		const startAngle = this.waypoints[0] ? this.waypoints[0].robotAngle : 0;
 		this._modifier = new SwerveModifier(
 			this.sourceSetpoints,
 			<SwerveCoord[]>this._generator.getCoords(),
 			this.pathConfig,
-			(<SwerveWaypoint>this.waypoints[0]).robotAngle,
+			startAngle,
 			this._turnInPlaceAngle
 		);
 		this._frontRightSetpoints = this._modifier.frontRightSetpoints;

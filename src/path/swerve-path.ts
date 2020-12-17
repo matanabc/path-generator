@@ -16,7 +16,7 @@ export default class SwervePath extends Path {
 	protected _backRightSetpoints: SwerveSetpoint[] = [];
 	protected _backLeftSetpoints: SwerveSetpoint[] = [];
 
-	constructor(waypoints: SwerveWaypoint[], pathConfig: PathConfig) {
+	constructor(waypoints: SwerveWaypoint[] = [], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
 		this.modify();
 	}
@@ -57,6 +57,10 @@ export default class SwervePath extends Path {
 
 	get coords(): Coord[] {
 		return this._modifier.robotCoord;
+	}
+
+	get waypoints(): SwerveWaypoint[] {
+		return <SwerveWaypoint[]>this._waypoints;
 	}
 
 	changeDirection(): void {

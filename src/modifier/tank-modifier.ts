@@ -82,7 +82,6 @@ export default class TankModifier {
 		);
 		setpoint.position = lastSetpoint.position + distance;
 		setpoint.velocity = distance / pathConfig.robotLoopTime;
-		const acc = (setpoint.velocity - lastSetpoint.velocity) / pathConfig.robotLoopTime;
-		setpoint.acceleration = Math.abs(acc) > 0 ? (acc / Math.abs(acc)) * pathConfig.acc : 0;
+		setpoint.acceleration = (setpoint.velocity - lastSetpoint.velocity) / pathConfig.robotLoopTime;
 	}
 }

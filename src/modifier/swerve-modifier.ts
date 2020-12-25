@@ -99,7 +99,7 @@ export default class SwerveModifier {
 			source.position,
 			source.velocity,
 			source.acceleration,
-			Util.r2d(Util.boundRadians(coord.angle))
+			Util.r2d(coord.angle)
 		);
 		setpoint.angle += -this._angle;
 		setpoint.acceleration *= 1 + ratio;

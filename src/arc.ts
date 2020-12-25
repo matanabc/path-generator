@@ -64,7 +64,7 @@ export default class Arc {
 		return new Coord(
 			x * cos_theta - y * sin_theta + this.x_offset,
 			x * sin_theta + y * cos_theta + this.y_offset,
-			boundRadians(Math.atan(this.deriv(percentage)) + this.angle_offset)
+			Math.atan(this.deriv(percentage)) + this.angle_offset
 		);
 	}
 

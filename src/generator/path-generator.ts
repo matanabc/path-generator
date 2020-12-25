@@ -1,5 +1,6 @@
-import PathConfig from '../path/path-config';
+import { pathConfigValueEqualTo0 } from '../errors/error';
 import IllegalPath from '../errors/illegal-path';
+import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint/setpoint';
 import Segment from '../segment';
@@ -20,7 +21,15 @@ export default class PathGenerator {
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		this.pathConfig = pathConfig;
 		this.waypoints = waypoints;
-		this.generate();
+		this.checkPathConfig();
+		if (this.error === undefined) this.generate();
+	}
+
+	protected checkPathConfig(): void {
+		if (this.pathConfig.acc === 0) this.error = pathConfigValueEqualTo0('acc');
+		else if (this.pathConfig.vMax === 0) this.error = pathConfigValueEqualTo0('vMax');
+		else if (this.pathConfig.robotLoopTime === 0)
+			this.error = pathConfigValueEqualTo0('robot loop time');
 	}
 
 	protected generate(): void {

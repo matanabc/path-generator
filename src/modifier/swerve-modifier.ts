@@ -1,114 +1,76 @@
-import SwerveSetpoint from '../setpoint/swerve-setpoint';
 import SwerveCoord from '../coord/swerve-coord';
 import PathConfig from '../path/path-config';
 import Setpoint from '../setpoint/setpoint';
-import Coord from '../coord/coord';
 import * as Util from '../util';
-
 export default class SwerveModifier {
-	protected _frontRightSetpoints: SwerveSetpoint[] = [];
-	protected _frontLeftSetpoints: SwerveSetpoint[] = [];
-	protected _backRightSetpoints: SwerveSetpoint[] = [];
-	protected _backLeftSetpoints: SwerveSetpoint[] = [];
+	protected _xSetpoints: Setpoint[] = [];
+	protected _ySetpoints: Setpoint[] = [];
+	protected _zSetpoints: Setpoint[] = [];
+	protected _coords: SwerveCoord[] = [];
 	protected _pathConfig: PathConfig;
-	protected _coords: Coord[] = [];
-	protected _startAngle: number;
-	protected _angle: number;
+	protected _source: Setpoint[];
 
-	get frontRightSetpoints(): SwerveSetpoint[] {
-		return this._frontRightSetpoints;
+	get xSetpoints(): Setpoint[] {
+		return this._xSetpoints;
 	}
 
-	get frontLeftSetpoints(): SwerveSetpoint[] {
-		return this._frontLeftSetpoints;
+	get ySetpoints(): Setpoint[] {
+		return this._ySetpoints;
 	}
 
-	get backRightSetpoints(): SwerveSetpoint[] {
-		return this._backRightSetpoints;
+	get zSetpoints(): Setpoint[] {
+		return this._zSetpoints;
 	}
 
-	get backLeftSetpoints(): SwerveSetpoint[] {
-		return this._backLeftSetpoints;
-	}
-
-	get robotCoord(): Coord[] {
-		return this._coords;
-	}
-
-	constructor(
-		source: Setpoint[],
-		coords: SwerveCoord[],
-		pathConfig: PathConfig,
-		startAngle: number,
-		turnInPlaceAngle: number
-	) {
-		this._angle = 0;
+	constructor(source: Setpoint[], coords: SwerveCoord[], pathConfig: PathConfig) {
 		this._pathConfig = pathConfig;
-		this._startAngle = startAngle;
-		if (turnInPlaceAngle === 0) this.modify(source, coords);
-		else this.turnInPlaceModify(source, turnInPlaceAngle, coords);
+		this._source = source;
+		this._coords = coords;
+		this.modify();
 	}
 
-	protected turnInPlaceModify(source: Setpoint[], turnAngle: number, coords: SwerveCoord[]): void {
-		this._coords.push(...coords);
-		const scale = turnAngle > 0 ? 1 : -1;
-		for (let i = 0; i < source.length; i++) {
-			const rightSetpoint = new SwerveSetpoint(
-				source[i].position * -scale,
-				source[i].velocity * -scale,
-				source[i].acceleration * -scale
-			);
-			const leftSetpoint = new SwerveSetpoint(
-				source[i].position * scale,
-				source[i].velocity * scale,
-				source[i].acceleration * scale
-			);
-			this._frontRightSetpoints.push(rightSetpoint);
-			this._backRightSetpoints.push(rightSetpoint);
-			this._frontLeftSetpoints.push(leftSetpoint);
-			this._backLeftSetpoints.push(leftSetpoint);
-		}
-	}
-
-	protected modify(source: Setpoint[], coords: SwerveCoord[]): void {
-		for (let i = 0; i < source.length; i++) {
-			const ratio = this.getRatio(coords[i]);
-			this.updateAngle(source, ratio, i);
-			const rightSetpoint = this.getSetpoint(source[i], coords[i], -ratio);
-			const leftSetpoint = this.getSetpoint(source[i], coords[i], ratio);
-			this._frontRightSetpoints.push(rightSetpoint);
-			this._backRightSetpoints.push(rightSetpoint);
-			this._frontLeftSetpoints.push(leftSetpoint);
-			this._backLeftSetpoints.push(leftSetpoint);
-			this.setCoord(coords[i]);
+	protected modify(): void {
+		for (let i = 0; i < this._coords.length; i++) {
+			const ratio = this.getRatio(this._coords[i]);
+			if (i > 0) this.calculateSetpoint(i, ratio);
+			else {
+				this._zSetpoints.push(Object.assign(new Setpoint(), { position: this.getAngle(0, ratio) }));
+				this._xSetpoints.push(Object.assign(new Setpoint(), { position: this._coords[0].x }));
+				this._ySetpoints.push(Object.assign(new Setpoint(), { position: this._coords[0].y }));
+			}
 		}
 	}
 
 	protected getRatio(coord: SwerveCoord): number {
-		return coord.radios === 0 ? 0 : this._pathConfig.width / (2 * coord.radios);
+		return coord.radios === 0 ? 0 : this._pathConfig.width / coord.radios;
 	}
 
-	protected updateAngle(source: Setpoint[], ratio: number, index: number): void {
-		const position = source[index].position;
-		const distance = index > 0 ? position - source[index - 1].position : position;
-		this._angle += Util.r2d((ratio * 2 * distance) / this._pathConfig.width);
+	protected getAngle(index: number, ratio: number): number {
+		const position = this._source[index].position;
+		return Util.r2d((ratio * position) / this._pathConfig.width);
 	}
 
-	protected getSetpoint(source: Setpoint, coord: SwerveCoord, ratio: number): SwerveSetpoint {
-		const setpoint = new SwerveSetpoint(
-			source.position,
-			source.velocity,
-			source.acceleration,
-			Util.r2d(coord.angle)
-		);
-		setpoint.angle += -this._angle;
-		setpoint.acceleration *= 1 + ratio;
-		setpoint.position *= 1 + ratio;
-		setpoint.velocity *= 1 + ratio;
-		return setpoint;
-	}
-
-	protected setCoord(coord: SwerveCoord): void {
-		this._coords.push(new Coord(coord.x, coord.y, Util.d2r(this._startAngle + this._angle)));
+	protected calculateSetpoint(index: number, ratio: number) {
+		const xSetpoint = new Setpoint();
+		const ySetpoint = new Setpoint();
+		const zSetpoint = new Setpoint();
+		const distanceX = this._coords[index].x - this._coords[index - 1].x;
+		const distanceY = this._coords[index].y - this._coords[index - 1].y;
+		const distanceZ = (this._source[index].position - this._source[index - 1].position) * ratio;
+		xSetpoint.position = this._coords[index].x;
+		ySetpoint.position = this._coords[index].y;
+		zSetpoint.position = this.getAngle(index, ratio);
+		xSetpoint.velocity = distanceX / this._pathConfig.robotLoopTime;
+		ySetpoint.velocity = distanceY / this._pathConfig.robotLoopTime;
+		zSetpoint.velocity = distanceZ / this._pathConfig.robotLoopTime;
+		xSetpoint.acceleration =
+			(xSetpoint.velocity - this._xSetpoints[index - 1].velocity) / this._pathConfig.robotLoopTime;
+		ySetpoint.acceleration =
+			(ySetpoint.velocity - this._ySetpoints[index - 1].velocity) / this._pathConfig.robotLoopTime;
+		zSetpoint.acceleration =
+			(zSetpoint.velocity - this._zSetpoints[index - 1].velocity) / this._pathConfig.robotLoopTime;
+		this._xSetpoints.push(xSetpoint);
+		this._ySetpoints.push(ySetpoint);
+		this._zSetpoints.push(zSetpoint);
 	}
 }

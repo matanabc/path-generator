@@ -28,8 +28,7 @@ export default class PathGenerator {
 	protected checkPathConfig(): void {
 		if (this.pathConfig.acc === 0) this.error = pathConfigValueEqualTo0('acc');
 		else if (this.pathConfig.vMax === 0) this.error = pathConfigValueEqualTo0('vMax');
-		else if (this.pathConfig.robotLoopTime === 0)
-			this.error = pathConfigValueEqualTo0('robot loop time');
+		else if (this.pathConfig.robotLoopTime === 0) this.error = pathConfigValueEqualTo0('robot loop time');
 	}
 
 	protected generate(): void {
@@ -70,11 +69,7 @@ export default class PathGenerator {
 		return segments;
 	}
 
-	protected generateSetpoints(
-		spline: Spline,
-		segments: Segment[],
-		startPosition: number
-	): Setpoint[] {
+	protected generateSetpoints(spline: Spline, segments: Segment[], startPosition: number): Setpoint[] {
 		var lastPos = startPosition;
 		const setpoints = [];
 		const robotLoopTime = this.pathConfig.robotLoopTime;

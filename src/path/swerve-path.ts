@@ -1,8 +1,5 @@
-import SwervePathGenerator from '../generator/swerve-path-generator';
 import SwerveWaypoint from '../waypoints/swerve-waypoint';
 import SwerveModifier from '../modifier/swerve-modifier';
-import PathGenerator from '../generator/path-generator';
-import SwerveCoord from '../coord/swerve-coord';
 import Setpoint from '../setpoint/setpoint';
 import PathConfig from './path-config';
 import Path from './path';
@@ -12,15 +9,7 @@ export default class SwervePath extends Path {
 
 	constructor(waypoints: SwerveWaypoint[] = [], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
-		this._modifier = new SwerveModifier(
-			this.sourceSetpoints,
-			<SwerveCoord[]>this._generator.getCoords(),
-			this.pathConfig
-		);
-	}
-
-	protected generatePath(): PathGenerator {
-		return new SwervePathGenerator(this.waypoints, this.pathConfig);
+		this._modifier = new SwerveModifier(this.sourceSetpoints, this._generator.getCoords(), this.pathConfig);
 	}
 
 	get xSetpoints(): Setpoint[] {

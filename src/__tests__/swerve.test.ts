@@ -31,11 +31,20 @@ function checkLastSetpointAngle(path: SwervePath, pathAngle: number): void {
 }
 
 test('Test path', () => {
-	const waypoints = [new Waypoint(2, 2, 0, 0, 0, 1), new Waypoint(4, 2, 0, 90, 0, 0)];
+	const waypoints = [
+		new Waypoint(0, 0, 0, 0, 0, 1),
+		new Waypoint(2, 2, 90, 90, 0, 1),
+		new Waypoint(4, 4, 0, 90, 0, 0),
+	];
 	const path = new Path(waypoints, pathConfig);
 	fs.writeFileSync('./test.x.json', JSON.stringify(path.xSetpoints));
 	fs.writeFileSync('./test.y.json', JSON.stringify(path.ySetpoints));
 	fs.writeFileSync('./test.z.json', JSON.stringify(path.zSetpoints));
+
+	fs.writeFileSync('./test.front-right.json', JSON.stringify(path.frontRightSetpoints));
+	fs.writeFileSync('./test.front-left.json', JSON.stringify(path.frontLeftSetpoints));
+	fs.writeFileSync('./test.back-right.json', JSON.stringify(path.backRightSetpoints));
+	fs.writeFileSync('./test.back-left.json', JSON.stringify(path.backLeftSetpoints));
 });
 
 test('Straight path', () => {

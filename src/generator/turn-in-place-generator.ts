@@ -5,16 +5,19 @@ import * as Util from '../util';
 import Spline from '../spline';
 import Setpoint from '../setpoint/setpoint';
 import Coord from '../coord/coord';
+import SwerveWaypoint from '../waypoints/swerve-waypoint';
 
 export default class TurnInPlaceGenerator extends PathGenerator {
 	protected _turnInPlaceAngle: number;
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
-		const turnAngle = waypoints[1].angle - waypoints[0].angle;
+		let turnAngle = 0;
+		if (waypoints[0] instanceof SwerveWaypoint && waypoints[0] instanceof SwerveWaypoint)
+			turnAngle = (<SwerveWaypoint>waypoints[1]).robotAngle - (<SwerveWaypoint>waypoints[0]).robotAngle;
+		else turnAngle = waypoints[1].angle - waypoints[0].angle;
 		const x = waypoints[0].x + Util.angle2Distance(turnAngle, pathConfig.width);
 		const startWaypoint = new Waypoint(waypoints[0].x, waypoints[0].y, 0, 0, waypoints[0].vMax);
 		const endWaypoint = new Waypoint(x, waypoints[0].y, 0, 0, 0);
-
 		super([startWaypoint, endWaypoint], pathConfig);
 		this._turnInPlaceAngle = turnAngle;
 		this.updateCoord(waypoints[0].angle);
@@ -41,11 +44,7 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 	}
 
 	public static isTurnInPlace(waypoints: Waypoint[]): boolean {
-		return (
-			waypoints.length === 2 &&
-			waypoints[0].x === waypoints[1].x &&
-			waypoints[0].y === waypoints[1].y
-		);
+		return waypoints.length === 2 && waypoints[0].x === waypoints[1].x && waypoints[0].y === waypoints[1].y;
 	}
 
 	get turnAngle(): number {

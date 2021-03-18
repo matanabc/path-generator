@@ -16,8 +16,9 @@ export default class SwerveModifier {
 	protected pathConfig: PathConfig;
 	protected coords: Coord[] = [];
 
-	constructor(coords: Coord[], pathConfig: PathConfig) {
+	constructor(setpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig) {
 		this.pathConfig = pathConfig;
+		this.zSetpoints = setpoints;
 		this.coords = coords;
 		this.modify();
 	}
@@ -31,10 +32,15 @@ export default class SwerveModifier {
 		this.backLeftSetpoints.push(new SwerveSetpoint());
 		for (let i = 1; i < this.coords.length; i++) {
 			this.calculateAxisSetpoint(i);
-			this.calculateSetpoint(i);
+			// this.calculateSetpoint(i);
+			if (i >= this.zSetpoints.length) {
+				const position = this.zSetpoints.length > 0 ? this.zSetpoints[this.zSetpoints.length - 1].position : 0;
+				this.zSetpoints.push(Object.assign(new Setpoint(), { position: position }));
+			}
 		}
 		this.xSetpoints = this.xSetpoints.slice(1);
 		this.ySetpoints = this.ySetpoints.slice(1);
+		this.zSetpoints = this.zSetpoints.slice(1);
 		this.frontRightSetpoints = this.frontRightSetpoints.slice(1);
 		this.backRightSetpoints = this.backRightSetpoints.slice(1);
 		this.frontLeftSetpoints = this.frontLeftSetpoints.slice(1);
@@ -44,7 +50,6 @@ export default class SwerveModifier {
 	protected calculateAxisSetpoint(index: number) {
 		const xSetpoint = new Setpoint();
 		const ySetpoint = new Setpoint();
-		const zSetpoint = new Setpoint();
 		const distanceX = this.coords[index].x - this.coords[index - 1].x;
 		const distanceY = this.coords[index].y - this.coords[index - 1].y;
 		xSetpoint.position = this.coords[index].x;
@@ -60,8 +65,12 @@ export default class SwerveModifier {
 	}
 
 	protected calculateSetpoint(index: number) {
-		const vector = new Vector(this.xSetpoints[index].velocity, this.ySetpoints[index].velocity, 0);
-		vector.fieldOriented(0);
+		const vector = new Vector(
+			this.xSetpoints[index].velocity,
+			this.ySetpoints[index].velocity,
+			this.zSetpoints[index].velocity
+		);
+		vector.fieldOriented(Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width));
 		const r = Math.sqrt(Math.pow(this.pathConfig.width, 2) + Math.pow(this.pathConfig.width, 2));
 
 		const a = vector.x - vector.rotation * (this.pathConfig.width / r);

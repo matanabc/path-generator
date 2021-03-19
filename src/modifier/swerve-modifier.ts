@@ -14,10 +14,12 @@ export default class SwerveModifier {
 	public ySetpoints: Setpoint[] = [];
 	public zSetpoints: Setpoint[] = [];
 	protected pathConfig: PathConfig;
+	protected startAngle: number;
 	public coords: Coord[] = [];
 
-	constructor(setpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig) {
+	constructor(setpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig, startAngle: number) {
 		this.pathConfig = pathConfig;
+		this.startAngle = startAngle;
 		this.zSetpoints = setpoints;
 		this.coords = coords;
 		this.modify();
@@ -30,18 +32,19 @@ export default class SwerveModifier {
 		this.backRightSetpoints.push(new SwerveSetpoint());
 		this.frontLeftSetpoints.push(new SwerveSetpoint());
 		this.backLeftSetpoints.push(new SwerveSetpoint());
+		this.coords[0].angle = this.getCoordAngle(0);
 		for (let i = 1; i < this.coords.length; i++) {
 			this.calculateAxisSetpoint(i);
 			this.calculateSetpoint(i);
 			this.coords[i].angle = this.getCoordAngle(i);
 		}
-		this.xSetpoints = this.xSetpoints.slice(1);
-		this.ySetpoints = this.ySetpoints.slice(1);
-		this.zSetpoints = this.zSetpoints.slice(1);
-		this.frontRightSetpoints = this.frontRightSetpoints.slice(1);
-		this.backRightSetpoints = this.backRightSetpoints.slice(1);
-		this.frontLeftSetpoints = this.frontLeftSetpoints.slice(1);
-		this.backLeftSetpoints = this.backLeftSetpoints.slice(1);
+		// this.xSetpoints = this.xSetpoints.slice(1);
+		// this.ySetpoints = this.ySetpoints.slice(1);
+		// this.zSetpoints = this.zSetpoints.slice(1);
+		// this.frontRightSetpoints = this.frontRightSetpoints.slice(1);
+		// this.backRightSetpoints = this.backRightSetpoints.slice(1);
+		// this.frontLeftSetpoints = this.frontLeftSetpoints.slice(1);
+		// this.backLeftSetpoints = this.backLeftSetpoints.slice(1);
 	}
 
 	protected calculateAxisSetpoint(index: number) {
@@ -67,7 +70,9 @@ export default class SwerveModifier {
 			this.ySetpoints[index].velocity,
 			this.zSetpoints[index].velocity
 		);
-		vector.fieldOriented(Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width));
+		vector.fieldOriented(
+			Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width) + this.startAngle
+		);
 		const r = Math.sqrt(Math.pow(this.pathConfig.width, 2) + Math.pow(this.pathConfig.width, 2));
 
 		const a = vector.x - vector.rotation * (this.pathConfig.width / r);
@@ -110,6 +115,6 @@ export default class SwerveModifier {
 	}
 
 	protected getCoordAngle(index: number): number {
-		return Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width);
+		return Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width) + this.startAngle;
 	}
 }

@@ -14,7 +14,7 @@ export default class SwerveModifier {
 	public ySetpoints: Setpoint[] = [];
 	public zSetpoints: Setpoint[] = [];
 	protected pathConfig: PathConfig;
-	protected coords: Coord[] = [];
+	public coords: Coord[] = [];
 
 	constructor(setpoints: Setpoint[], coords: Coord[], pathConfig: PathConfig) {
 		this.pathConfig = pathConfig;
@@ -33,10 +33,7 @@ export default class SwerveModifier {
 		for (let i = 1; i < this.coords.length; i++) {
 			this.calculateAxisSetpoint(i);
 			this.calculateSetpoint(i);
-			if (i >= this.zSetpoints.length) {
-				const position = this.zSetpoints.length > 0 ? this.zSetpoints[this.zSetpoints.length - 1].position : 0;
-				this.zSetpoints.push(Object.assign(new Setpoint(), { position: position }));
-			}
+			this.coords[i].angle = this.getCoordAngle(i);
 		}
 		this.xSetpoints = this.xSetpoints.slice(1);
 		this.ySetpoints = this.ySetpoints.slice(1);
@@ -110,5 +107,9 @@ export default class SwerveModifier {
 
 		targetTurn += lastSetpoint.angle - currentTurnMod;
 		return targetTurn;
+	}
+
+	protected getCoordAngle(index: number): number {
+		return Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width);
 	}
 }

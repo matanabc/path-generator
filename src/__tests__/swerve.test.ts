@@ -35,6 +35,7 @@ test('Test path', () => {
 
 	const path = new Path(waypoints, pathConfig);
 
+	fs.writeFileSync('./test.coord.json', JSON.stringify(path.coords));
 	fs.writeFileSync('./test.x.json', JSON.stringify(path.xSetpoints));
 	fs.writeFileSync('./test.y.json', JSON.stringify(path.ySetpoints));
 	fs.writeFileSync('./test.z.json', JSON.stringify(path.zSetpoints));

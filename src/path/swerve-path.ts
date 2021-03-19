@@ -6,6 +6,7 @@ import PathConfig from './path-config';
 import Path from './path';
 import PathGenerator from '../generator/path-generator';
 import SwervePathGenerator from '../generator/swerve-path-generator';
+import Coord from '../coord/coord';
 
 export default class SwervePath extends Path {
 	protected _modifier: SwerveModifier = {} as SwerveModifier;
@@ -54,5 +55,9 @@ export default class SwervePath extends Path {
 
 	get waypoints(): SwerveWaypoint[] {
 		return <SwerveWaypoint[]>this._waypoints;
+	}
+
+	get coords(): Coord[] {
+		return this._modifier.coords;
 	}
 }

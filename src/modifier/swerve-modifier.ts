@@ -32,7 +32,7 @@ export default class SwerveModifier {
 		this.backLeftSetpoints.push(new SwerveSetpoint());
 		for (let i = 1; i < this.coords.length; i++) {
 			this.calculateAxisSetpoint(i);
-			// this.calculateSetpoint(i);
+			this.calculateSetpoint(i);
 			if (i >= this.zSetpoints.length) {
 				const position = this.zSetpoints.length > 0 ? this.zSetpoints[this.zSetpoints.length - 1].position : 0;
 				this.zSetpoints.push(Object.assign(new Setpoint(), { position: position }));
@@ -87,7 +87,7 @@ export default class SwerveModifier {
 	protected getSetpoint(setpoints: SwerveSetpoint[], lastSetpoint: SwerveSetpoint, a: number, b: number, c: number) {
 		const setpoint = new SwerveSetpoint();
 		setpoint.velocity = Math.sqrt(a * a + b * b);
-		setpoint.angle = 90 - Util.r2d(Math.atan2(a, c));
+		setpoint.angle = Util.r2d(Math.atan2(a, c));
 		setpoint.position = lastSetpoint.position + setpoint.velocity * this.pathConfig.robotLoopTime;
 		setpoint.acceleration = (setpoint.velocity - lastSetpoint.velocity) / this.pathConfig.robotLoopTime;
 		setpoints.push(setpoint);

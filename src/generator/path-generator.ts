@@ -11,6 +11,7 @@ export default class PathGenerator {
 	protected pathConfig: PathConfig;
 	protected waypoints: Waypoint[];
 
+	protected turnSetpoints: Setpoint[] = [];
 	protected setpoints: Setpoint[] = [];
 	protected segments: Segment[] = [];
 	protected splines: Spline[] = [];

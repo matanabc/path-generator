@@ -49,8 +49,7 @@ export default class Spline {
 	getError(): IllegalSpline | undefined {
 		if (this.startPoint.vMax === 0) return error.vMaxEqualTo0();
 		if (this.distance > 20) return error.splineIsToLong();
-		if (this.vMax < this.vEnd)
-			return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
+		if (this.vMax < this.vEnd) return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
 	}
 
 	get pathConfig(): PathConfig {

@@ -31,31 +31,18 @@ function checkLastSetpointAngle(path: SwervePath, pathAngle: number): void {
 }
 
 test('Test path', () => {
-	const waypoints = [
-		new Waypoint(0, 0, 0, 0, 0, 1),
-		new Waypoint(2, 0, 0, 0, 0, 0),
-		// new Waypoint(4, 4, 0, 90, 0, 0),
-	];
-	const config = new PathConfig(0.8, 0.20204102886728847, 2);
+	const waypoints = [new Waypoint(0, 0, 0, 0, 0, 1), new Waypoint(2, 0, 0, 90, 0, 0)];
 
-	const T = 10;
-	const d = 2;
-	const a = 2;
+	const path = new Path(waypoints, pathConfig);
 
-	// get V max
-	console.log((-T + Math.sqrt(T * T - (4 * d) / a)) / (-2 / a));
+	fs.writeFileSync('./test.x.json', JSON.stringify(path.xSetpoints));
+	fs.writeFileSync('./test.y.json', JSON.stringify(path.ySetpoints));
+	fs.writeFileSync('./test.z.json', JSON.stringify(path.zSetpoints));
 
-	const path = new Path(waypoints, config);
-	console.log(path.sourceSetpoints.length * config.robotLoopTime);
-
-	// fs.writeFileSync('./test.x.json', JSON.stringify(path.xSetpoints));
-	// fs.writeFileSync('./test.y.json', JSON.stringify(path.ySetpoints));
-	// fs.writeFileSync('./test.z.json', JSON.stringify(path.zSetpoints));
-
-	// fs.writeFileSync('./test.front-right.json', JSON.stringify(path.frontRightSetpoints));
-	// fs.writeFileSync('./test.front-left.json', JSON.stringify(path.frontLeftSetpoints));
-	// fs.writeFileSync('./test.back-right.json', JSON.stringify(path.backRightSetpoints));
-	// fs.writeFileSync('./test.back-left.json', JSON.stringify(path.backLeftSetpoints));
+	fs.writeFileSync('./test.front-right.json', JSON.stringify(path.frontRightSetpoints));
+	fs.writeFileSync('./test.front-left.json', JSON.stringify(path.frontLeftSetpoints));
+	fs.writeFileSync('./test.back-right.json', JSON.stringify(path.backRightSetpoints));
+	fs.writeFileSync('./test.back-left.json', JSON.stringify(path.backLeftSetpoints));
 });
 
 test('Straight path', () => {

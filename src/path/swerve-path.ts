@@ -4,7 +4,8 @@ import SwerveSetpoint from '../setpoint/swerve-setpoint';
 import Setpoint from '../setpoint/setpoint';
 import PathConfig from './path-config';
 import Path from './path';
-import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
+import PathGenerator from '../generator/path-generator';
+import SwervePathGenerator from '../generator/swerve-path-generator';
 
 export default class SwervePath extends Path {
 	protected _modifier: SwerveModifier = {} as SwerveModifier;
@@ -12,9 +13,15 @@ export default class SwervePath extends Path {
 	constructor(waypoints: SwerveWaypoint[] = [], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
 		if (this.isIllegal()) return;
-		// const turnPath = new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
+		this._modifier = new SwerveModifier(
+			(<SwervePathGenerator>this._generator).getTurnSetpoints(),
+			this._generator.getCoords(),
+			this.pathConfig
+		);
+	}
 
-		this._modifier = new SwerveModifier([], this._generator.getCoords(), this.pathConfig);
+	protected generatePath(): PathGenerator {
+		return new SwervePathGenerator(this.waypoints, this.pathConfig);
 	}
 
 	get xSetpoints(): Setpoint[] {
@@ -29,21 +36,21 @@ export default class SwervePath extends Path {
 		return this._modifier.zSetpoints;
 	}
 
-	// get frontRightSetpoints(): Setpoint[] {
-	// 	return this._modifier.frontRightSetpoints;
-	// }
+	get frontRightSetpoints(): Setpoint[] {
+		return this._modifier.frontRightSetpoints;
+	}
 
-	// get backRightSetpoints(): Setpoint[] {
-	// 	return this._modifier.backRightSetpoints;
-	// }
+	get backRightSetpoints(): Setpoint[] {
+		return this._modifier.backRightSetpoints;
+	}
 
-	// get frontLeftSetpoints(): Setpoint[] {
-	// 	return this._modifier.frontLeftSetpoints;
-	// }
+	get frontLeftSetpoints(): Setpoint[] {
+		return this._modifier.frontLeftSetpoints;
+	}
 
-	// get backLeftSetpoints(): SwerveSetpoint[] {
-	// 	return this._modifier.backLeftSetpoints;
-	// }
+	get backLeftSetpoints(): SwerveSetpoint[] {
+		return this._modifier.backLeftSetpoints;
+	}
 
 	get waypoints(): SwerveWaypoint[] {
 		return <SwerveWaypoint[]>this._waypoints;

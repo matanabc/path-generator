@@ -31,7 +31,7 @@ function checkLastSetpointAngle(path: SwervePath, pathAngle: number): void {
 }
 
 test('Test path', () => {
-	const waypoints = [new Waypoint(0, 0, 0, 0, 0, 1), new Waypoint(2, 0, 0, 90, 0, 0)];
+	const waypoints = [new Waypoint(0, 0, 0, 0, 0, 1), new Waypoint(2, 0, 0, 180, 0, 0)];
 
 	const path = new Path(waypoints, pathConfig);
 

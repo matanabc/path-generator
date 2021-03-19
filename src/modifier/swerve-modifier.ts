@@ -87,9 +87,28 @@ export default class SwerveModifier {
 	protected getSetpoint(setpoints: SwerveSetpoint[], lastSetpoint: SwerveSetpoint, a: number, b: number, c: number) {
 		const setpoint = new SwerveSetpoint();
 		setpoint.velocity = Math.sqrt(a * a + b * b);
-		setpoint.angle = Util.r2d(Math.atan2(a, c));
+		setpoint.angle = this.getAngle(lastSetpoint, a, c);
 		setpoint.position = lastSetpoint.position + setpoint.velocity * this.pathConfig.robotLoopTime;
 		setpoint.acceleration = (setpoint.velocity - lastSetpoint.velocity) / this.pathConfig.robotLoopTime;
 		setpoints.push(setpoint);
+	}
+
+	protected getAngle(lastSetpoint: SwerveSetpoint, a: number, b: number): number {
+		let targetTurn = Util.r2d(Math.atan2(a, b));
+		let currentTurnMod = lastSetpoint.angle % 360;
+		if (currentTurnMod < 0) currentTurnMod += 360;
+
+		let delta = currentTurnMod - targetTurn;
+		if (delta > 180) targetTurn += 360;
+		else if (delta < -180) targetTurn -= 360;
+
+		delta = currentTurnMod - targetTurn;
+		if (delta > 90 || delta < -90) {
+			if (delta > 90) targetTurn += 180;
+			else if (delta < -90) targetTurn -= 180;
+		}
+
+		targetTurn += lastSetpoint.angle - currentTurnMod;
+		return targetTurn;
 	}
 }

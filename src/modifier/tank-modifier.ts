@@ -8,12 +8,7 @@ export default class TankModifier {
 	protected _leftCoords: Coord[] = [];
 	protected _rightCoords: Coord[] = [];
 
-	constructor(
-		source: Setpoint[],
-		coords: Coord[],
-		pathConfig: PathConfig,
-		turnInPlaceAngle: number
-	) {
+	constructor(source: Setpoint[], coords: Coord[], pathConfig: PathConfig, turnInPlaceAngle: number) {
 		if (turnInPlaceAngle === 0) this.modify(source, coords, pathConfig);
 		else this.turnInPlaceModify(source, turnInPlaceAngle);
 	}
@@ -43,7 +38,7 @@ export default class TankModifier {
 	}
 
 	protected modify(source: Setpoint[], coords: Coord[], pathConfig: PathConfig): void {
-		const robotWidth = pathConfig.width / 2;
+		const robotWidth = pathConfig.radios / 2;
 		for (let i = 0; i < source.length; i++) {
 			this._leftSetpoints.push(Object.assign(new Setpoint(), source[i]));
 			this._rightSetpoints.push(Object.assign(new Setpoint(), source[i]));
@@ -59,26 +54,16 @@ export default class TankModifier {
 	protected getCoord(coord: Coord, robotWidth: number): Coord {
 		const cos_angle = Math.cos(coord.angle);
 		const sin_angle = Math.sin(coord.angle);
-		return new Coord(
-			coord.x - robotWidth * sin_angle,
-			coord.y + robotWidth * cos_angle,
-			coord.angle
-		);
+		return new Coord(coord.x - robotWidth * sin_angle, coord.y + robotWidth * cos_angle, coord.angle);
 	}
 
-	protected calculateSetpoint(
-		setpoints: Setpoint[],
-		coords: Coord[],
-		index: number,
-		pathConfig: PathConfig
-	): void {
+	protected calculateSetpoint(setpoints: Setpoint[], coords: Coord[], index: number, pathConfig: PathConfig): void {
 		const setpoint = setpoints[index];
 		const coord = coords[index];
 		const lastSetpoint = setpoints[index - 1];
 		const lastCoord = coords[index - 1];
 		const distance = Math.sqrt(
-			(coord.x - lastCoord.x) * (coord.x - lastCoord.x) +
-				(coord.y - lastCoord.y) * (coord.y - lastCoord.y)
+			(coord.x - lastCoord.x) * (coord.x - lastCoord.x) + (coord.y - lastCoord.y) * (coord.y - lastCoord.y)
 		);
 		setpoint.position = lastSetpoint.position + distance;
 		setpoint.velocity = distance / pathConfig.robotLoopTime;

@@ -28,7 +28,7 @@ export default class SwervePathGenerator extends PathGenerator {
 			for (let i = 0; i < totalTime / this.pathConfig.robotLoopTime; i++) this.turnSetpoints.push(new Setpoint());
 			return;
 		}
-		const distance = Util.angle2Distance(turnAngle, this.pathConfig.width);
+		const distance = Util.angle2Distance(turnAngle, this.pathConfig.radios);
 		config.vMax =
 			(-totalTime + Math.sqrt(totalTime * totalTime - (4 * distance) / this.pathConfig.acc)) /
 			(-2 / this.pathConfig.acc);

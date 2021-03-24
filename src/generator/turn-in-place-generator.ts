@@ -15,7 +15,7 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 		if (waypoints[0] instanceof SwerveWaypoint && waypoints[0] instanceof SwerveWaypoint)
 			turnAngle = (<SwerveWaypoint>waypoints[1]).robotAngle - (<SwerveWaypoint>waypoints[0]).robotAngle;
 		else turnAngle = waypoints[1].angle - waypoints[0].angle;
-		const x = waypoints[0].x + Util.angle2Distance(turnAngle, pathConfig.width);
+		const x = waypoints[0].x + Util.angle2Distance(turnAngle, pathConfig.radios);
 		const startWaypoint = new Waypoint(waypoints[0].x, waypoints[0].y, 0, 0, waypoints[0].vMax);
 		const endWaypoint = new Waypoint(x, waypoints[0].y, 0, 0, 0);
 		super([startWaypoint, endWaypoint], pathConfig);
@@ -30,7 +30,7 @@ export default class TurnInPlaceGenerator extends PathGenerator {
 				new Coord(
 					spline.startPoint.x,
 					spline.startPoint.y,
-					Util.d2r(Util.distance2Angle(setpoints[i].position, spline.pathConfig.width))
+					Util.d2r(Util.distance2Angle(setpoints[i].position, spline.pathConfig.radios))
 				)
 			);
 		return coords;

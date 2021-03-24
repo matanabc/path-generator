@@ -70,15 +70,12 @@ export default class SwerveModifier {
 			this.ySetpoints[index].velocity,
 			this.zSetpoints[index].velocity
 		);
-		vector.fieldOriented(
-			Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width) + this.startAngle
-		);
-		const r = Math.sqrt(Math.pow(this.pathConfig.width, 2) + Math.pow(this.pathConfig.width, 2));
+		vector.fieldOriented(Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.radios));
 
-		const a = vector.x - vector.rotation * (this.pathConfig.width / r);
-		const b = vector.x + vector.rotation * (this.pathConfig.width / r);
-		const c = vector.y - vector.rotation * (this.pathConfig.width / r);
-		const d = vector.y + vector.rotation * (this.pathConfig.width / r);
+		const a = vector.x - vector.rotation * (this.pathConfig.length / this.pathConfig.radios);
+		const b = vector.x + vector.rotation * (this.pathConfig.length / this.pathConfig.radios);
+		const c = vector.y - vector.rotation * (this.pathConfig.width / this.pathConfig.radios);
+		const d = vector.y + vector.rotation * (this.pathConfig.width / this.pathConfig.radios);
 
 		this.getSetpoint(this.frontRightSetpoints, this.frontRightSetpoints[index - 1], b, c, d);
 		this.getSetpoint(this.backRightSetpoints, this.backRightSetpoints[index - 1], b, d, d);
@@ -96,7 +93,7 @@ export default class SwerveModifier {
 	}
 
 	protected getAngle(lastSetpoint: SwerveSetpoint, a: number, b: number): number {
-		let targetTurn = Util.r2d(Math.atan2(a, b));
+		let targetTurn = 90 - Util.r2d(Math.atan2(a, b));
 		let currentTurnMod = lastSetpoint.angle % 360;
 		if (currentTurnMod < 0) currentTurnMod += 360;
 
@@ -115,6 +112,6 @@ export default class SwerveModifier {
 	}
 
 	protected getCoordAngle(index: number): number {
-		return Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.width) + this.startAngle;
+		return Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.radios) + this.startAngle;
 	}
 }

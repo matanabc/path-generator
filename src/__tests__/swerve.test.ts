@@ -4,7 +4,7 @@ import SwerveSetpoint from '../setpoint/swerve-setpoint';
 import * as fs from 'fs';
 
 const { Path, PathConfig, Waypoint } = Swerve;
-const pathConfig = new PathConfig(0.8, 2, 2);
+const pathConfig = new PathConfig(2, 2, 0.8);
 
 function basicPathCheck(path: SwervePath): void {
 	expect(path.isIllegal()).toBe(false);
@@ -31,7 +31,7 @@ function checkLastSetpointAngle(path: SwervePath, pathAngle: number): void {
 }
 
 test('Test path', () => {
-	const waypoints = [new Waypoint(0, 0, 0, 90, 0, 1), new Waypoint(2, 0, 0, 270, 0, 0)];
+	const waypoints = [new Waypoint(0, 0, 0, 0, 0, 1), new Waypoint(2, 0, 0, 180, 0, 0)];
 
 	const path = new Path(waypoints, pathConfig);
 

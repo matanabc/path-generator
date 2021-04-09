@@ -30,9 +30,10 @@ export default class SwervePathGenerator extends PathGenerator {
 		}
 		const distance = Util.angle2Distance(turnAngle, this.pathConfig.radios);
 		config.vMax =
-			(-totalTime + Math.sqrt(totalTime * totalTime - (4 * distance) / this.pathConfig.acc)) /
+			(-totalTime + Math.sqrt(totalTime * totalTime - (4 * Math.abs(distance)) / this.pathConfig.acc)) /
 			(-2 / this.pathConfig.acc);
 		const turnPath = new TurnInPlaceGenerator([this.waypoints[index], this.waypoints[index + 1]], config);
+		if (distance < 0) turnPath.getSetpoint().forEach((setpoint) => setpoint.changeDirection());
 		this.turnSetpoints.push(...turnPath.getSetpoint());
 	}
 

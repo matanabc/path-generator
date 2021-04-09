@@ -70,7 +70,9 @@ export default class SwerveModifier {
 			this.ySetpoints[index].velocity,
 			this.zSetpoints[index].velocity
 		);
-		vector.fieldOriented(Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.radios));
+		vector.fieldOriented(
+			Util.distance2Angle(this.zSetpoints[index].position, this.pathConfig.radios) + this.startAngle
+		);
 
 		const a = vector.x - vector.rotation * (this.pathConfig.length / this.pathConfig.radios);
 		const b = vector.x + vector.rotation * (this.pathConfig.length / this.pathConfig.radios);

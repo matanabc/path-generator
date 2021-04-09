@@ -79,23 +79,26 @@ export default class SwerveModifier {
 		const c = vector.y - vector.rotation * (this.pathConfig.width / this.pathConfig.radios);
 		const d = vector.y + vector.rotation * (this.pathConfig.width / this.pathConfig.radios);
 
-		this.getSetpoint(this.frontRightSetpoints, this.frontRightSetpoints[index - 1], b, c, d);
-		this.getSetpoint(this.backRightSetpoints, this.backRightSetpoints[index - 1], b, d, d);
-		this.getSetpoint(this.frontLeftSetpoints, this.frontLeftSetpoints[index - 1], a, c, c);
-		this.getSetpoint(this.backLeftSetpoints, this.backLeftSetpoints[index - 1], a, d, c);
+		this.getSetpoint(this.frontRightSetpoints, this.frontRightSetpoints[index - 1], b, c);
+		this.getSetpoint(this.backRightSetpoints, this.backRightSetpoints[index - 1], a, c);
+		this.getSetpoint(this.backLeftSetpoints, this.backLeftSetpoints[index - 1], a, d);
+		this.getSetpoint(this.frontLeftSetpoints, this.frontLeftSetpoints[index - 1], b, d);
 	}
 
-	protected getSetpoint(setpoints: SwerveSetpoint[], lastSetpoint: SwerveSetpoint, a: number, b: number, c: number) {
+	protected getSetpoint(setpoints: SwerveSetpoint[], lastSetpoint: SwerveSetpoint, x: number, y: number) {
+		const { direction, angle } = this.getAngle(lastSetpoint, x, y);
 		const setpoint = new SwerveSetpoint();
-		setpoint.velocity = Math.sqrt(a * a + b * b);
-		setpoint.angle = this.getAngle(lastSetpoint, a, c);
+		setpoint.velocity = Math.sqrt(x * x + y * y) * direction;
+		setpoint.angle = angle;
 		setpoint.position = lastSetpoint.position + setpoint.velocity * this.pathConfig.robotLoopTime;
-		setpoint.acceleration = (setpoint.velocity - lastSetpoint.velocity) / this.pathConfig.robotLoopTime;
+		setpoint.acceleration = Math.abs(setpoint.velocity) - Math.abs(lastSetpoint.velocity);
+		setpoint.acceleration /= this.pathConfig.robotLoopTime * direction;
 		setpoints.push(setpoint);
 	}
 
-	protected getAngle(lastSetpoint: SwerveSetpoint, a: number, b: number): number {
-		let targetTurn = 90 - Util.r2d(Math.atan2(a, b));
+	protected getAngle(lastSetpoint: SwerveSetpoint, x: number, y: number) {
+		let direction = 1;
+		let targetTurn = Util.r2d(Math.atan2(y, x));
 		let currentTurnMod = lastSetpoint.angle % 360;
 		if (currentTurnMod < 0) currentTurnMod += 360;
 
@@ -107,10 +110,11 @@ export default class SwerveModifier {
 		if (delta > 90 || delta < -90) {
 			if (delta > 90) targetTurn += 180;
 			else if (delta < -90) targetTurn -= 180;
-		}
+			direction = -1;
+		} else direction = 1;
 
 		targetTurn += lastSetpoint.angle - currentTurnMod;
-		return targetTurn;
+		return { angle: targetTurn, direction: direction };
 	}
 
 	protected getCoordAngle(index: number): number {

@@ -1,4 +1,4 @@
-import { Util } from '.';
+import { Util } from '..';
 
 export default class Vector {
 	protected _x: number;

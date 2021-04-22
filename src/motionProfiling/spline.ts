@@ -1,8 +1,8 @@
-import IllegalSpline from './errors/illegal-spline';
-import PathConfig from './path/path-config';
-import Waypoint from './waypoints/waypoint';
-import * as error from './errors/error';
-import Coord from './coord/coord';
+import IllegalSpline from '../errors/illegal-spline';
+import PathConfig from '../path/path-config';
+import Waypoint from '../waypoints/waypoint';
+import * as error from '../errors/error';
+import Coord from '../coord/coord';
 import Arc from './arc';
 
 export default class Spline {

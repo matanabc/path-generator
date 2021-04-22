@@ -3,8 +3,8 @@ import IllegalPath from '../errors/illegal-path';
 import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint/setpoint';
-import Segment from '../segment';
-import Spline from '../spline';
+import Segment from '../motionProfiling/segment';
+import Spline from '../motionProfiling/spline';
 import Coord from '../coord/coord';
 
 export default class PathGenerator {

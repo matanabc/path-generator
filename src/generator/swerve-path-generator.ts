@@ -3,7 +3,7 @@ import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint/setpoint';
 import Coord from '../coord/coord';
-import Spline from '../spline';
+import Spline from '../motionProfiling/spline';
 import TurnInPlaceGenerator from './turn-in-place-generator';
 import SwerveWaypoint from '../waypoints/swerve-waypoint';
 import { Util } from '..';

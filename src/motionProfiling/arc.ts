@@ -1,7 +1,7 @@
-import PathConfig from './path/path-config';
-import Waypoint from './waypoints/waypoint';
-import { boundRadians, d2r } from './util';
-import Coord from './coord/coord';
+import PathConfig from '../path/path-config';
+import Waypoint from '../waypoints/waypoint';
+import { boundRadians, d2r } from '../util';
+import Coord from '../coord/coord';
 
 export default class Arc {
 	protected sampleCount: number = 100000;

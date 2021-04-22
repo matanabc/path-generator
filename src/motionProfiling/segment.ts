@@ -1,4 +1,4 @@
-import Setpoint from './setpoint/setpoint';
+import Setpoint from '../setpoint/setpoint';
 
 export default class Segment {
 	private _totalTime: number = 0;
@@ -26,11 +26,7 @@ export default class Segment {
 	}
 
 	getSetpoint(time: number, relativePosition: number): Setpoint {
-		return new Setpoint(
-			this.getPosition(time) + relativePosition,
-			this.getVelocity(time),
-			this._acc
-		);
+		return new Setpoint(this.getPosition(time) + relativePosition, this.getVelocity(time), this._acc);
 	}
 
 	private getPosition(time: number): number {

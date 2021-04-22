@@ -3,7 +3,7 @@ import PathConfig from '../path/path-config';
 import Setpoint from '../setpoint/setpoint';
 import Coord from '../coord/coord';
 import * as Util from '../util';
-import Vector from '../vector';
+import Vector from './vector';
 
 export default class SwerveModifier {
 	public frontRightSetpoints: SwerveSetpoint[] = [];

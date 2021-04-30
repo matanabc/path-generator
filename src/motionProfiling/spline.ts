@@ -13,12 +13,18 @@ export default class Spline extends Line {
 	protected _arc: Arc;
 
 	constructor(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig) {
-		super();
-		this._arc = new Arc(startPoint, endPoint, pathConfig);
+		const arc = new Arc(startPoint, endPoint, pathConfig);
+		super(
+			Math.abs(arc.arc_length),
+			Math.abs(pathConfig.acc),
+			Math.abs(Math.min(startPoint.v, pathConfig.vMax)),
+			Math.abs(Math.min(endPoint.v, pathConfig.vMax)),
+			Math.abs(Math.min(startPoint.vMax, pathConfig.vMax))
+		);
+		this._arc = arc;
 		this._pathConfig = pathConfig;
 		this._startPoint = startPoint;
 		this._endPoint = endPoint;
-		this.setVellAndAcc();
 	}
 
 	private setVellAndAcc(): void {
@@ -48,9 +54,5 @@ export default class Spline extends Line {
 
 	get endPoint(): Waypoint {
 		return this._endPoint;
-	}
-
-	get distance(): number {
-		return this._arc.arc_length;
 	}
 }

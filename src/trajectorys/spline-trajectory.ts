@@ -6,8 +6,6 @@ import Trajectory from './trajectory';
 import Coord from '../coord/coord';
 
 export default class SplineTrajectory extends Trajectory {
-	protected _splines: Spline[] = [];
-
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
 	}
@@ -24,7 +22,6 @@ export default class SplineTrajectory extends Trajectory {
 			this._setpoints.push(...setpoints);
 			this._segments.push(...segments);
 			this._coords.push(...coords);
-			this._splines.push(spline);
 		}
 	}
 

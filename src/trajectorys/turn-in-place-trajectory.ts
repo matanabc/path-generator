@@ -11,7 +11,7 @@ export default class TurnInPlaceTrajectory extends LineTrajectory {
 		if (waypoints[0] instanceof SwerveWaypoint && waypoints[0] instanceof SwerveWaypoint)
 			turnAngle = (<SwerveWaypoint>waypoints[1]).robotAngle - (<SwerveWaypoint>waypoints[0]).robotAngle;
 		else turnAngle = waypoints[1].angle - waypoints[0].angle;
-		const x = waypoints[0].x + Util.angle2Distance(turnAngle, pathConfig.radios);
+		const x = Math.abs(waypoints[0].x + Util.angle2Distance(turnAngle, pathConfig.radios));
 		const startWaypoint = new Waypoint(waypoints[0].x, waypoints[0].y, 0, 0, vMax);
 		const endWaypoint = new Waypoint(x, waypoints[0].y, 0, 0, 0);
 		super([startWaypoint, endWaypoint], pathConfig);

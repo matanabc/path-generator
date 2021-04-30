@@ -1,8 +1,7 @@
-import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
+import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
 import TankModifier from '../modifier/tank-modifier';
-import Waypoint from '../waypoints/waypoint';
+import { PathConfig, Waypoint } from '..';
 import Setpoint from '../setpoint/setpoint';
-import PathConfig from './path-config';
 import Path from './path';
 
 export default class TankPath extends Path {
@@ -16,12 +15,8 @@ export default class TankPath extends Path {
 	}
 
 	protected modify(): void {
-		this._modifier = new TankModifier(
-			this.sourceSetpoints,
-			this.coords,
-			this.pathConfig,
-			this._turnInPlaceAngle
-		);
+		const turnAngle = this.isTurnInPlace() ? (<TurnInPlaceTrajectory>(<unknown>this._trajectory)).turnAngle : 0;
+		this._modifier = new TankModifier(this.sourceSetpoints, this.coords, this.pathConfig, turnAngle);
 		this._rightSetpoints = this._modifier.rightSetpoints;
 		this._leftSetpoints = this._modifier.leftSetpoints;
 	}
@@ -35,7 +30,7 @@ export default class TankPath extends Path {
 	}
 
 	changeDirection(): void {
-		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints)) return;
+		if (this.isTurnInPlace()) return;
 		this._isReverse = !this._isReverse;
 		if (!this._isReverse) {
 			this._rightSetpoints = this._modifier.rightSetpoints;

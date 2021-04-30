@@ -1,13 +1,13 @@
-import TurnInPlaceGenerator from '../generator/turn-in-place-generator';
-import PathGenerator from '../generator/path-generator';
+import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
+import SplineTrajectory from '../trajectorys/spline-trajectory';
+import Trajectory from '../trajectorys/trajectory';
 import Waypoint from '../waypoints/waypoint';
 import Setpoint from '../setpoint/setpoint';
 import PathConfig from './path-config';
 import Coord from '../coord/coord';
 
 export default class Path {
-	protected _generator: PathGenerator = {} as PathGenerator;
-	protected _turnInPlaceAngle: number = 0;
+	protected _trajectory: Trajectory = {} as Trajectory;
 	protected _isReverse: boolean = false;
 	protected _pathConfig: PathConfig;
 	protected _waypoints: Waypoint[];
@@ -19,18 +19,9 @@ export default class Path {
 	}
 
 	protected generate(): void {
-		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints)) {
-			this._generator = this.generateTurnInPlacePath();
-			this._turnInPlaceAngle = (<TurnInPlaceGenerator>this._generator).turnAngle;
-		} else this._generator = this.generatePath();
-	}
-
-	protected generatePath(): PathGenerator {
-		return new PathGenerator(this.waypoints, this.pathConfig);
-	}
-
-	protected generateTurnInPlacePath(): PathGenerator {
-		return new TurnInPlaceGenerator(this.waypoints, this.pathConfig);
+		if (TurnInPlaceTrajectory.isTurnInPlace(this.waypoints))
+			this._trajectory = new TurnInPlaceTrajectory(this.waypoints, this.pathConfig);
+		else this._trajectory = new SplineTrajectory(this.waypoints, this.pathConfig);
 	}
 
 	get waypoints(): Waypoint[] {
@@ -42,23 +33,23 @@ export default class Path {
 	}
 
 	get sourceSetpoints(): Setpoint[] {
-		return this._generator.getSetpoint();
+		return this._trajectory.setpoints;
 	}
 
 	get coords(): Coord[] {
-		return this._generator.getCoords();
+		return this._trajectory.coords;
 	}
 
 	get error() {
-		return this._generator.getError();
+		return this._trajectory.error;
 	}
 
 	isIllegal(): boolean {
-		return this._generator.getError() !== undefined;
+		return this.error !== undefined;
 	}
 
 	isTurnInPlace(): boolean {
-		return this._turnInPlaceAngle !== 0;
+		return this._trajectory instanceof TurnInPlaceTrajectory;
 	}
 
 	isReverse(): boolean {
@@ -66,8 +57,8 @@ export default class Path {
 	}
 
 	changeDirection(): void {
-		if (TurnInPlaceGenerator.isTurnInPlace(this.waypoints)) return;
+		if (this.isTurnInPlace()) return;
 		this._isReverse = !this._isReverse;
-		for (let i = 0; i < this.sourceSetpoints.length; i++) this.sourceSetpoints[i].changeDirection();
+		this.sourceSetpoints.forEach((setpoint) => setpoint.changeDirection());
 	}
 }

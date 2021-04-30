@@ -6,6 +6,7 @@ import Setpoint from '../setpoint/setpoint';
 import Segment from '../motionProfiling/segment';
 import Spline from '../motionProfiling/spline';
 import Coord from '../coord/coord';
+import Line from '../motionProfiling/line';
 
 export default class PathGenerator {
 	protected pathConfig: PathConfig;
@@ -59,13 +60,13 @@ export default class PathGenerator {
 		return spline;
 	}
 
-	protected generateSegments(spline: Spline): Segment[] {
-		const speeding2vMax = new Segment(spline.V0, spline.vMax, spline.acc);
-		const slowing2vEnd = new Segment(spline.vMax, spline.vEnd, spline.acc);
+	protected generateSegments(object: Line): Segment[] {
+		const speeding2vMax = new Segment(object.V0, object.vMax, object.acc);
+		const slowing2vEnd = new Segment(object.vMax, object.vEnd, object.acc);
 		const speedingAndSlowingDistance = speeding2vMax.distance + slowing2vEnd.distance;
 		const segments = [];
 		segments.push(speeding2vMax);
-		segments.push(new Segment(spline.vMax, spline.distance - speedingAndSlowingDistance));
+		segments.push(new Segment(object.vMax, object.distance - speedingAndSlowingDistance));
 		segments.push(slowing2vEnd);
 		return segments;
 	}

@@ -53,11 +53,12 @@ export default class SwerveTrajectory extends Trajectory {
 
 	protected calculateCoords(): void {
 		for (let i = 0; i < this.xSetpoints.length; i++) {
+			const angle = this.zSetpoints[i] ? this.zSetpoints[i].position : 0;
 			this._coords.push(
 				new Coord(
-					this.xSetpoints[i].position,
-					this.ySetpoints[i].position,
-					Util.d2r(Util.distance2Angle(this.zSetpoints[i].position, this.pathConfig.radios))
+					this.xSetpoints[i] ? this.xSetpoints[i].position : 0,
+					this.ySetpoints[i] ? this.ySetpoints[i].position : 0,
+					Util.d2r(Util.distance2Angle(angle, this.pathConfig.radios))
 				)
 			);
 		}
@@ -65,7 +66,7 @@ export default class SwerveTrajectory extends Trajectory {
 
 	protected fixTrajectory(trajectory: LineTrajectory, totalTime: number) {
 		if (trajectory.distance > 0) return;
-		for (let i = 0; i < totalTime / this.pathConfig.robotLoopTime; i++) {
+		for (let i = 0; i < Number(totalTime.toFixed(3)) / this.pathConfig.robotLoopTime; i++) {
 			trajectory.setpoints.push(new Setpoint());
 			trajectory.coords.push(new Coord(0, 0, 0));
 			trajectory.error = undefined;
@@ -81,13 +82,13 @@ export default class SwerveTrajectory extends Trajectory {
 
 	protected getXLine(index: number, vMax: number = this.waypoints[index].vMax): LineTrajectory {
 		const startWaypoint = Object.assign(new Waypoint(), {
+			v: this.waypoints[index].v * Math.cos(Util.d2r(this.waypoints[index].angle)),
 			x: this.waypoints[index].x,
-			v: this.waypoints[index].v,
 			vMax: vMax,
 		});
 		const endWaypoint = Object.assign(new Waypoint(), {
+			v: this.waypoints[index + 1].v * Math.cos(Util.d2r(this.waypoints[index + 1].angle)),
 			x: this.waypoints[index + 1].x,
-			v: this.waypoints[index + 1].v,
 			vMax: vMax,
 		});
 		return new LineTrajectory([startWaypoint, endWaypoint], this.pathConfig);
@@ -95,13 +96,13 @@ export default class SwerveTrajectory extends Trajectory {
 
 	protected getYLine(index: number, vMax: number = this.waypoints[index].vMax): LineTrajectory {
 		const startWaypoint = Object.assign(new Waypoint(), {
+			v: this.waypoints[index].v * Math.sin(Util.d2r(this.waypoints[index].angle)),
 			x: this.waypoints[index].y,
-			v: this.waypoints[index].v,
 			vMax: vMax,
 		});
 		const endWaypoint = Object.assign(new Waypoint(), {
+			v: this.waypoints[index + 1].v * Math.sin(Util.d2r(this.waypoints[index + 1].angle)),
 			x: this.waypoints[index + 1].y,
-			v: this.waypoints[index + 1].v,
 			vMax: vMax,
 		});
 		return new LineTrajectory([startWaypoint, endWaypoint], this.pathConfig);

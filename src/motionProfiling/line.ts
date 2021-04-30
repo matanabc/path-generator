@@ -34,7 +34,7 @@ export default class Line {
 	}
 
 	getError(): IllegalSpline | undefined {
-		if (this.vMax === 0) return error.vMaxEqualTo0();
+		if (this.vMax === 0 && this.distance > 0) return error.vMaxEqualTo0();
 		if (this.vMax < this.vEnd) return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
 	}
 

@@ -10,7 +10,7 @@ export default class SplineTrajectory extends Trajectory {
 		super(waypoints, pathConfig);
 	}
 
-	generate(): void {
+	protected generate(): void {
 		let lastPosition = 0;
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
 			const spline = this.generateSpline(this.waypoints[i], this.waypoints[i + 1]);

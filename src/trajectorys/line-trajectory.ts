@@ -10,7 +10,7 @@ export default class LineTrajectory extends Trajectory {
 		super(waypoints, pathConfig);
 	}
 
-	generate(): void {
+	protected generate(): void {
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
 			const line = this.generateLine(this.waypoints[i], this.waypoints[i + 1]);
 			if (this.error !== undefined) break;

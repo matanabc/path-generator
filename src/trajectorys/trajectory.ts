@@ -23,7 +23,7 @@ export default abstract class Trajectory {
 		this.generate();
 	}
 
-	abstract generate(): void;
+	protected abstract generate(): void;
 
 	protected checkPathConfig(): void {
 		if (this.pathConfig.acc === 0) this.error = pathConfigValueEqualTo0('acc');

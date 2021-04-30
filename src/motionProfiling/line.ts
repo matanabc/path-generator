@@ -1,3 +1,5 @@
+import IllegalSpline from '../errors/illegal-spline';
+import * as error from '../errors/error';
 import { Waypoint } from '..';
 
 export default class Line {
@@ -29,6 +31,15 @@ export default class Line {
 			),
 			Math.abs(vMax)
 		);
+	}
+
+	getError(): IllegalSpline | undefined {
+		if (this.vMax === 0) return error.vMaxEqualTo0();
+		if (this.vMax < this.vEnd) return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
+	}
+
+	getInfo(): string {
+		return `(Distance: ${this.distance}, Acc: ${this.acc}, v0: ${this.V0}, vMax: ${this.vMax}, vEnd: ${this.vEnd})`;
 	}
 
 	get distance(): number {

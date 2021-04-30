@@ -108,7 +108,10 @@ export default class SwerveTrajectory extends Trajectory {
 	}
 
 	protected getZLine(index: number, vMax: number = this.waypoints[index].vMax): TurnInPlaceTrajectory {
-		return new TurnInPlaceTrajectory([this.waypoints[index], this.waypoints[index + 1]], this.pathConfig, vMax);
+		const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
+		const trajectory = new TurnInPlaceTrajectory(waypoints, this.pathConfig, vMax);
+		if (trajectory.turnAngle < 0) trajectory.setpoints.forEach((setpoint) => setpoint.changeDirection());
+		return trajectory;
 	}
 
 	get xSetpoints(): Setpoint[] {

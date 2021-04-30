@@ -32,7 +32,7 @@ export default class SplineTrajectory extends Trajectory {
 		const spline = new Spline(startWaypoint, endWaypoint, this.pathConfig);
 		const splineError = spline.getError();
 		if (splineError !== undefined)
-			this._error = new IllegalPath(
+			this.error = new IllegalPath(
 				`Spline ${startWaypoint.getInfo()} to ${endWaypoint.getInfo()} is illegal!`,
 				splineError
 			);

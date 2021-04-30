@@ -6,25 +6,21 @@ import Trajectory from './trajectory';
 import Coord from '../coord/coord';
 
 export default class LineTrajectory extends Trajectory {
-	protected _lines: Line[] = [];
-
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
 	}
 
 	generate(): void {
-		let lastPosition = 0;
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
 			const line = this.generateLine(this.waypoints[i], this.waypoints[i + 1]);
 			if (this.error !== undefined) break;
 			const segments = this.generateSegments(line);
-			const setpoints = this.generateSetpoints(segments, lastPosition);
+			const setpoints = this.generateSetpoints(segments, this._distance);
 			const coords = this.generateCoords(setpoints);
-			lastPosition += line.distance;
+			this._distance += line.distance;
 			this._setpoints.push(...setpoints);
 			this._segments.push(...segments);
 			this._coords.push(...coords);
-			this._lines.push(line);
 		}
 	}
 
@@ -37,11 +33,15 @@ export default class LineTrajectory extends Trajectory {
 			startWaypoint.vMax
 		);
 		const lineError = line.getError();
-		if (lineError !== undefined) this._error = new IllegalPath(`Line ${line.getInfo()} is illegal!`, lineError);
+		if (lineError !== undefined) this.error = new IllegalPath(`Line ${line.getInfo()} is illegal!`, lineError);
 		return line;
 	}
 
 	generateCoords(setpoints: Setpoint[]): Coord[] {
 		return setpoints.map(() => new Coord(0, 0, 0));
+	}
+
+	get distance(): number {
+		return this._distance;
 	}
 }

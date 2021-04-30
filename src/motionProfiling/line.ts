@@ -12,9 +12,9 @@ export default class Line {
 	constructor(distance: number = 0, acc: number = 0, V0: number = 0, vEnd: number = 0, vMax: number = 0) {
 		this._distance = distance;
 		this._vEnd = vEnd;
-		this._vMax = this.getVMax(vMax);
 		this._acc = acc;
 		this._V0 = V0;
+		this._vMax = this.getVMax(vMax);
 	}
 
 	public getWaypoints(): Waypoint[] {
@@ -43,7 +43,7 @@ export default class Line {
 	}
 
 	get distance(): number {
-		return 0;
+		return this._distance;
 	}
 
 	get vMax(): number {

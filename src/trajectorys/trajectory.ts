@@ -10,11 +10,11 @@ export default abstract class Trajectory {
 	protected _setpoints: Setpoint[] = [];
 	protected _segments: Segment[] = [];
 	protected _coords: Coord[] = [];
-	protected _error?: IllegalPath;
+	protected _distance: number = 0;
+	public error?: IllegalPath;
 
 	protected pathConfig: PathConfig;
 	protected waypoints: Waypoint[];
-	protected time: number = 0;
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		this.pathConfig = pathConfig;
@@ -26,9 +26,9 @@ export default abstract class Trajectory {
 	abstract generate(): void;
 
 	protected checkPathConfig(): void {
-		if (this.pathConfig.acc === 0) this._error = pathConfigValueEqualTo0('acc');
-		else if (this.pathConfig.vMax === 0) this._error = pathConfigValueEqualTo0('vMax');
-		else if (this.pathConfig.robotLoopTime === 0) this._error = pathConfigValueEqualTo0('robot loop time');
+		if (this.pathConfig.acc === 0) this.error = pathConfigValueEqualTo0('acc');
+		else if (this.pathConfig.vMax === 0) this.error = pathConfigValueEqualTo0('vMax');
+		else if (this.pathConfig.robotLoopTime === 0) this.error = pathConfigValueEqualTo0('robot loop time');
 	}
 
 	protected generateSegments(object: Line): Segment[] {
@@ -43,23 +43,24 @@ export default abstract class Trajectory {
 	}
 
 	protected generateSetpoints(segments: Segment[], startPosition: number): Setpoint[] {
+		let time = 0;
 		let lastPos = startPosition;
 		const setpoints = [];
 		const robotLoopTime = this.pathConfig.robotLoopTime;
 		for (let i = 0; i < segments.length; i++) {
 			if (segments[i].distance === 0) continue;
-			for (; this.time < segments[i].totalTime; this.time += robotLoopTime) {
-				const setpoint = segments[i].getSetpoint(this.time, lastPos);
+			for (; time < segments[i].totalTime; time += robotLoopTime) {
+				const setpoint = segments[i].getSetpoint(time, lastPos);
 				setpoints.push(setpoint);
 			}
 			lastPos += segments[i].distance;
-			this.time = this.time - segments[i].totalTime;
+			time = time - segments[i].totalTime;
 		}
 		return setpoints;
 	}
 
 	get totalTime(): number {
-		return this.time;
+		return this.setpoints.length * this.pathConfig.robotLoopTime;
 	}
 
 	get setpoints(): Setpoint[] {
@@ -68,9 +69,5 @@ export default abstract class Trajectory {
 
 	get coords(): Coord[] {
 		return this._coords;
-	}
-
-	get error(): IllegalPath | undefined {
-		return this._error;
 	}
 }

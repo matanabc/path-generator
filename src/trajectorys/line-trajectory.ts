@@ -1,11 +1,11 @@
-import IllegalPath from '../errors/illegal-path';
-import Setpoint from '../setpoint/setpoint';
+import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
+import { PathGeneratorError } from '../motionProfiling/errors';
+import Setpoint from '../motionProfiling/setpoint';
+import Segment from '../motionProfiling/segment';
+import Coord from '../motionProfiling/coord';
 import Line from '../motionProfiling/line';
 import { PathConfig, Waypoint } from '..';
 import Trajectory from './trajectory';
-import Coord from '../coord/coord';
-import Segment from '../motionProfiling/segment';
-import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
 
 export default class LineTrajectory extends Trajectory {
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
@@ -15,7 +15,6 @@ export default class LineTrajectory extends Trajectory {
 	protected generate(): void {
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
 			const line = this.generateLine(this.waypoints[i], this.waypoints[i + 1]);
-			if (this.error !== undefined) break;
 			const segments = this.generateSegments(line, i);
 			const setpoints = this.generateSetpoints(segments, this._distance);
 			const coords = this.generateCoords(setpoints);
@@ -45,16 +44,21 @@ export default class LineTrajectory extends Trajectory {
 	}
 
 	protected generateLine(startWaypoint: Waypoint, endWaypoint: Waypoint): Line {
-		const line = new Line(
-			endWaypoint.x - startWaypoint.x,
-			this.pathConfig.acc,
-			startWaypoint.v,
-			endWaypoint.v,
-			startWaypoint.vMax
-		);
-		const lineError = line.getError();
-		if (lineError !== undefined) this.error = new IllegalPath(`Line ${line.getInfo()} is illegal!`, lineError);
-		return line;
+		let line = undefined;
+		try {
+			line = new Line(
+				endWaypoint.x - startWaypoint.x,
+				this.pathConfig.acc,
+				startWaypoint.v,
+				endWaypoint.v,
+				startWaypoint.vMax
+			);
+			return line;
+		} catch (error) {
+			if (error instanceof PathGeneratorError && line instanceof Line)
+				error.problem = `Line ${line.getInfo()} is illegal`;
+			throw error;
+		}
 	}
 
 	generateCoords(setpoints: Setpoint[]): Coord[] {

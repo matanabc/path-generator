@@ -1,11 +1,11 @@
 import TurnInPlaceTrajectory from './turn-in-place-trajectory';
 import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
 import SplineTrajectory from './spline-trajectory';
+import Setpoint from '../motionProfiling/setpoint';
 import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
-import Setpoint from '../setpoint/setpoint';
+import Coord from '../motionProfiling/coord';
 import Trajectory from './trajectory';
-import Coord from '../coord/coord';
 import { Util } from '..';
 
 export default class HolonomicTrajectory extends Trajectory {

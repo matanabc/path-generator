@@ -1,5 +1,4 @@
-import IllegalSpline from '../errors/illegal-spline';
-import * as error from '../errors/error';
+import { VMaxEqualToZero, VMaxSmallerThenVEnd } from './errors';
 import { Waypoint } from '..';
 
 export default class Line {
@@ -15,6 +14,7 @@ export default class Line {
 		this._acc = acc;
 		this._V0 = V0;
 		this.vMax = this.getVMax(vMax);
+		this.checkForError();
 	}
 
 	public getWaypoints(): Waypoint[] {
@@ -33,9 +33,9 @@ export default class Line {
 		);
 	}
 
-	getError(): IllegalSpline | undefined {
-		if (this.vMax === 0 && this.distance > 0) return error.vMaxEqualTo0();
-		if (this.vMax < this.vEnd) return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
+	checkForError(): void {
+		if (this.vMax === 0 && this.distance > 0) throw new VMaxEqualToZero();
+		if (this.vMax < this.vEnd) throw new VMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
 	}
 
 	getInfo(): string {

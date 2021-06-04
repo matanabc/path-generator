@@ -1,6 +1,6 @@
+import Setpoint from '../motionProfiling/setpoint';
 import PathConfig from '../path/path-config';
-import Setpoint from '../setpoint/setpoint';
-import Coord from '../coord/coord';
+import Coord from '../motionProfiling/coord';
 
 export default class TankModifier {
 	protected _leftSetpoints: Setpoint[] = [];

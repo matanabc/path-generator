@@ -1,7 +1,7 @@
-import SwerveSetpoint from '../setpoint/swerve-setpoint';
+import SwerveSetpoint from '../motionProfiling/swerve-setpoint';
+import Setpoint from '../motionProfiling/setpoint';
 import PathConfig from '../path/path-config';
-import Setpoint from '../setpoint/setpoint';
-import Coord from '../coord/coord';
+import Coord from '../motionProfiling/coord';
 import * as Util from '../util';
 import Vector from './vector';
 

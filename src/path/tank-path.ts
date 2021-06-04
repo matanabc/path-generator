@@ -1,7 +1,7 @@
 import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
 import TankModifier from '../modifier/tank-modifier';
+import Setpoint from '../motionProfiling/setpoint';
 import { PathConfig, Waypoint } from '..';
-import Setpoint from '../setpoint/setpoint';
 import Path from './path';
 
 export default class TankPath extends Path {

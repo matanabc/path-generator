@@ -1,10 +1,9 @@
-import IllegalSpline from '../errors/illegal-spline';
 import PathConfig from '../path/path-config';
 import Waypoint from '../waypoints/waypoint';
-import * as error from '../errors/error';
-import Coord from '../coord/coord';
-import Arc from './arc';
+import { SplineIsToLong } from './errors';
+import Coord from './coord';
 import Line from './line';
+import Arc from './arc';
 
 export default class Spline extends Line {
 	protected _pathConfig: PathConfig;
@@ -27,21 +26,13 @@ export default class Spline extends Line {
 		this._endPoint = endPoint;
 	}
 
-	private setVellAndAcc(): void {
-		this._acc = Math.abs(this.pathConfig.acc);
-		this._V0 = Math.min(Math.abs(this.startPoint.v), Math.abs(this.pathConfig.vMax));
-		this._vEnd = Math.min(Math.abs(this.endPoint.v), Math.abs(this.pathConfig.vMax));
-		this.vMax = Math.min(Math.abs(this.startPoint.vMax), this.getVMax(this.pathConfig.vMax));
-	}
-
 	getPositionCoords(pos_relative: number): Coord {
 		return this._arc.getPositionCoords(pos_relative);
 	}
 
-	getError(): IllegalSpline | undefined {
-		if (this.startPoint.vMax === 0) return error.vMaxEqualTo0();
-		if (this.distance > 20) return error.splineIsToLong();
-		if (this.vMax < this.vEnd) return error.vMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
+	checkForError(): void {
+		super.checkForError();
+		if (this.distance > 20) throw new SplineIsToLong();
 	}
 
 	get pathConfig(): PathConfig {

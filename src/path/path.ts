@@ -1,21 +1,27 @@
 import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
 import SplineTrajectory from '../trajectorys/spline-trajectory';
+import { PathGeneratorError } from '../motionProfiling/errors';
 import Trajectory from '../trajectorys/trajectory';
+import Setpoint from '../motionProfiling/setpoint';
+import Coord from '../motionProfiling/coord';
 import Waypoint from '../waypoints/waypoint';
-import Setpoint from '../setpoint/setpoint';
 import PathConfig from './path-config';
-import Coord from '../coord/coord';
 
 export default class Path {
 	protected _trajectory: Trajectory = {} as Trajectory;
 	protected _isReverse: boolean = false;
+	protected _error?: PathGeneratorError;
 	protected _pathConfig: PathConfig;
 	protected _waypoints: Waypoint[];
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		this._waypoints = waypoints;
 		this._pathConfig = pathConfig;
-		this.generate();
+		try {
+			this.generate();
+		} catch (error) {
+			this._error = error;
+		}
 	}
 
 	protected generate(): void {
@@ -41,7 +47,7 @@ export default class Path {
 	}
 
 	get error() {
-		return this._trajectory.error;
+		return this._error;
 	}
 
 	isIllegal(): boolean {

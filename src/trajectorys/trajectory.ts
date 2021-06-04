@@ -1,17 +1,15 @@
-import { pathConfigValueEqualTo0 } from '../errors/error';
-import IllegalPath from '../errors/illegal-path';
+import { PathConfigValueEqualToZero } from '../motionProfiling/errors';
+import Setpoint from '../motionProfiling/setpoint';
 import Segment from '../motionProfiling/segment';
-import Setpoint from '../setpoint/setpoint';
+import Coord from '../motionProfiling/coord';
 import Line from '../motionProfiling/line';
 import { PathConfig, Waypoint } from '..';
-import Coord from '../coord/coord';
 
 export default abstract class Trajectory {
 	protected _setpoints: Setpoint[] = [];
 	protected _segments: Segment[] = [];
 	protected _coords: Coord[] = [];
 	protected _distance: number = 0;
-	public error?: IllegalPath;
 
 	protected pathConfig: PathConfig;
 	protected waypoints: Waypoint[];
@@ -26,9 +24,9 @@ export default abstract class Trajectory {
 	protected abstract generate(): void;
 
 	protected checkPathConfig(): void {
-		if (this.pathConfig.acc === 0) this.error = pathConfigValueEqualTo0('acc');
-		else if (this.pathConfig.vMax === 0) this.error = pathConfigValueEqualTo0('vMax');
-		else if (this.pathConfig.robotLoopTime === 0) this.error = pathConfigValueEqualTo0('robot loop time');
+		if (this.pathConfig.acc === 0) throw new PathConfigValueEqualToZero('acc');
+		else if (this.pathConfig.vMax === 0) throw new PathConfigValueEqualToZero('vMax');
+		else if (this.pathConfig.robotLoopTime === 0) throw new PathConfigValueEqualToZero('robot loop time');
 	}
 
 	protected generateSegments(object: Line, index: number = 0): Segment[] {

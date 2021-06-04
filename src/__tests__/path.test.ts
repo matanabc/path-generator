@@ -1,6 +1,6 @@
 import { Path, Waypoint, PathConfig, Util } from '../index';
-import Setpoint from '../setpoint/setpoint';
-import Coord from '../coord/coord';
+import Setpoint from '../motionProfiling/setpoint';
+import Coord from '../motionProfiling/coord';
 
 const pathConfig = new PathConfig(0.8, 2, 3);
 
@@ -51,11 +51,7 @@ test('Turn in place path', () => {
 });
 
 test('S path', () => {
-	const waypoints = [
-		new Waypoint(0, 0, 0, 0, 2),
-		new Waypoint(1.5, 1.5, 90, 2, 2),
-		new Waypoint(3, 3, 0, 0, 0),
-	];
+	const waypoints = [new Waypoint(0, 0, 0, 0, 2), new Waypoint(1.5, 1.5, 90, 2, 2), new Waypoint(3, 3, 0, 0, 0)];
 	const path = new Path(waypoints, pathConfig);
 
 	expect(path.isIllegal()).toBe(false);

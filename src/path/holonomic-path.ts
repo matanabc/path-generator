@@ -1,7 +1,7 @@
 import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
 import HolonomicTrajectory from '../trajectorys/holonomic-trajectory';
 import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
-import Setpoint from '../setpoint/setpoint';
+import Setpoint from '../motionProfiling/setpoint';
 import { PathConfig } from '..';
 import Path from './path';
 

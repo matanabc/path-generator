@@ -1,7 +1,7 @@
 import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
 import { PathConfig, Util, Waypoint } from '..';
 import LineTrajectory from './line-trajectory';
-import Coord from '../coord/coord';
+import Coord from '../motionProfiling/coord';
 
 export default class TurnInPlaceTrajectory extends LineTrajectory {
 	protected _turnInPlaceAngle: number;

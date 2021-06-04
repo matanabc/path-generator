@@ -1,4 +1,4 @@
-import { VMaxEqualToZero, VMaxSmallerThenVEnd } from './errors';
+import { VMaxEqualToZero, VMaxSmallerThenVEnd, VMaxEqualToNaN } from './errors';
 import { Waypoint } from '..';
 
 export default class Line {
@@ -34,6 +34,7 @@ export default class Line {
 	}
 
 	checkForError(): void {
+		if (Number.isNaN(this.vMax)) throw new VMaxEqualToNaN();
 		if (this.vMax === 0 && this.distance > 0) throw new VMaxEqualToZero();
 		if (this.vMax < this.vEnd) throw new VMaxSmallerThenVEnd(this.V0, this.vEnd, this.vMax, this.getVMax());
 	}

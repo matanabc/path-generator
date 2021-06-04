@@ -38,3 +38,9 @@ export class PathConfigValueEqualToZero extends PathGeneratorError {
 		super(`Path config ${value} is equal to 0`, `Increase path config ${value}`);
 	}
 }
+
+export class VMaxEqualToNaN extends PathGeneratorError {
+	constructor() {
+		super('V max equal to NaN', 'Decrease vMax or increase distance');
+	}
+}

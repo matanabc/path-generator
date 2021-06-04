@@ -39,11 +39,11 @@ export default class Path {
 	}
 
 	get sourceSetpoints(): Setpoint[] {
-		return this._trajectory.setpoints;
+		return this._trajectory.setpoints ? this._trajectory.setpoints : [];
 	}
 
 	get coords(): Coord[] {
-		return this._trajectory.coords;
+		return this._trajectory.coords ? this._trajectory.coords : [];
 	}
 
 	get error() {

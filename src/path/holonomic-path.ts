@@ -22,7 +22,8 @@ export default class HolonomicPath extends Path {
 	}
 
 	protected setSetpoints() {
-		if (this.isTurnInPlace()) {
+		if (this.isIllegal()) return;
+		else if (this.isTurnInPlace()) {
 			this._zSetpoints = this._trajectory.setpoints;
 			const setpoints = this.zSetpoints.map(() => new Setpoint());
 			this._xSetpoints = setpoints;

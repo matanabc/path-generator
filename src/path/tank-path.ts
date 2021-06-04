@@ -15,6 +15,7 @@ export default class TankPath extends Path {
 	}
 
 	protected modify(): void {
+		if (this.isIllegal()) return;
 		const turnAngle = this.isTurnInPlace() ? (<TurnInPlaceTrajectory>(<unknown>this._trajectory)).turnAngle : 0;
 		this._modifier = new TankModifier(this.sourceSetpoints, this.coords, this.pathConfig, turnAngle);
 		this._rightSetpoints = this._modifier.rightSetpoints;

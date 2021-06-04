@@ -1,9 +1,9 @@
 export class PathGeneratorError extends Error {
 	public message: string;
-	public problem: string;
+	public problem?: string;
 	public solution: string;
 
-	constructor(message: string, solution: string, problem: string = message) {
+	constructor(message: string, solution: string, problem?: string) {
 		super(message);
 		this.message = message;
 		this.problem = problem;

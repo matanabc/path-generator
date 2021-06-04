@@ -31,7 +31,7 @@ export default class Spline extends Line {
 		this._acc = Math.abs(this.pathConfig.acc);
 		this._V0 = Math.min(Math.abs(this.startPoint.v), Math.abs(this.pathConfig.vMax));
 		this._vEnd = Math.min(Math.abs(this.endPoint.v), Math.abs(this.pathConfig.vMax));
-		this._vMax = Math.min(Math.abs(this.startPoint.vMax), this.getVMax(this.pathConfig.vMax));
+		this.vMax = Math.min(Math.abs(this.startPoint.vMax), this.getVMax(this.pathConfig.vMax));
 	}
 
 	getPositionCoords(pos_relative: number): Coord {

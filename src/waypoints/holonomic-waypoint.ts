@@ -1,6 +1,6 @@
 import Waypoint from './waypoint';
 
-export default class SwerveWaypoint extends Waypoint {
+export default class HolonomicWaypoint extends Waypoint {
 	public robotAngle: number;
 
 	/**

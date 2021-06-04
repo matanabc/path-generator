@@ -1,7 +1,7 @@
-import SwerveWaypoint from './waypoints/swerve-waypoint';
+import HolonomicWaypoint from './waypoints/holonomic-waypoint';
+import HolonomicPath from './path/holonomic-path';
 import Waypoint from './waypoints/waypoint';
 import PathConfig from './path/path-config';
-import SwervePath from './path/swerve-path';
 import TankPath from './path/tank-path';
 import * as Util from './util';
 import Path from './path/path';
@@ -12,10 +12,12 @@ const Tank = {
 	Waypoint,
 };
 
-const Swerve = {
-	Waypoint: SwerveWaypoint,
-	Path: SwervePath,
+const Holonomic = {
+	Waypoint: HolonomicWaypoint,
+	Path: HolonomicPath,
 	PathConfig,
 };
 
-export { PathConfig, Waypoint, Path, Util, Tank, Swerve };
+const driveTypes = ['Tank', 'Holonomic'];
+
+export { PathConfig, Waypoint, Path, Util, Tank, Holonomic, driveTypes };

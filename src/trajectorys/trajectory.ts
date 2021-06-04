@@ -31,7 +31,7 @@ export default abstract class Trajectory {
 		else if (this.pathConfig.robotLoopTime === 0) this.error = pathConfigValueEqualTo0('robot loop time');
 	}
 
-	protected generateSegments(object: Line): Segment[] {
+	protected generateSegments(object: Line, index: number = 0): Segment[] {
 		const speeding2vMax = new Segment(object.V0, object.vMax, object.acc);
 		const slowing2vEnd = new Segment(object.vMax, object.vEnd, object.acc);
 		const speedingAndSlowingDistance = speeding2vMax.distance + slowing2vEnd.distance;

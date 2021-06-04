@@ -5,16 +5,16 @@ import { Waypoint } from '..';
 export default class Line {
 	protected _distance: number = 0;
 	protected _vEnd: number = 0;
-	protected _vMax: number = 0;
 	protected _acc: number = 0;
 	protected _V0: number = 0;
+	public vMax: number = 0;
 
 	constructor(distance: number = 0, acc: number = 0, V0: number = 0, vEnd: number = 0, vMax: number = 0) {
 		this._distance = distance;
 		this._vEnd = vEnd;
 		this._acc = acc;
 		this._V0 = V0;
-		this._vMax = this.getVMax(vMax);
+		this.vMax = this.getVMax(vMax);
 	}
 
 	public getWaypoints(): Waypoint[] {
@@ -44,10 +44,6 @@ export default class Line {
 
 	get distance(): number {
 		return this._distance;
-	}
-
-	get vMax(): number {
-		return this._vMax;
 	}
 
 	get vEnd(): number {

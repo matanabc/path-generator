@@ -6,7 +6,7 @@ import Coord from '../motionProfiling/coord';
 export default class TurnInPlaceTrajectory extends LineTrajectory {
 	protected _turnInPlaceAngle: number;
 
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig, vMax: number = waypoints[0].vMax) {
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig, vMax: number = waypoints[0].vMax, index?: number) {
 		let turnAngle = 0;
 		if (waypoints[0] instanceof HolonomicWaypoint && waypoints[1] instanceof HolonomicWaypoint)
 			turnAngle = (<HolonomicWaypoint>waypoints[1]).robotAngle - (<HolonomicWaypoint>waypoints[0]).robotAngle;
@@ -14,7 +14,7 @@ export default class TurnInPlaceTrajectory extends LineTrajectory {
 		const x = Math.abs(waypoints[0].x + Util.angle2Distance(Math.abs(turnAngle), pathConfig.radios));
 		const startWaypoint = new Waypoint(waypoints[0].x, waypoints[0].y, 0, 0, vMax);
 		const endWaypoint = new Waypoint(x, waypoints[0].y, 0, 0, 0);
-		super([startWaypoint, endWaypoint], pathConfig);
+		super([startWaypoint, endWaypoint], pathConfig, index);
 		if (turnAngle < 0) this.setpoints.forEach((setpoint) => setpoint.changeDirection());
 		this._turnInPlaceAngle = turnAngle;
 		this.updateCoord(waypoints[0]);

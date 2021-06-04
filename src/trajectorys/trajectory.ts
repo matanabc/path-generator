@@ -14,14 +14,14 @@ export default abstract class Trajectory {
 	protected pathConfig: PathConfig;
 	protected waypoints: Waypoint[];
 
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig, index?: number) {
 		this.pathConfig = pathConfig;
 		this.waypoints = waypoints;
 		this.checkPathConfig();
-		this.generate();
+		this.generate(index);
 	}
 
-	protected abstract generate(): void;
+	protected abstract generate(index?: number): void;
 
 	protected checkPathConfig(): void {
 		if (this.pathConfig.acc === 0) throw new PathConfigValueEqualToZero('acc');

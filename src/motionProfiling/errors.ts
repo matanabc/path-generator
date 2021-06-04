@@ -1,13 +1,19 @@
 export class PathGeneratorError extends Error {
 	public message: string;
-	public problem?: string;
 	public solution: string;
+	public problem?: string;
+	public position?: string;
 
 	constructor(message: string, solution: string, problem?: string) {
 		super(message);
+		Object.setPrototypeOf(this, PathGeneratorError.prototype);
 		this.message = message;
 		this.problem = problem;
 		this.solution = solution;
+	}
+
+	public addErrorPosition(index: number): void {
+		this.position = `The error occurred while using waypoint ${index + 1} and ${index + 2}`;
 	}
 }
 

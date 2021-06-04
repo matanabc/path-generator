@@ -8,13 +8,13 @@ import { PathConfig, Waypoint } from '..';
 import Trajectory from './trajectory';
 
 export default class LineTrajectory extends Trajectory {
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
-		super(waypoints, pathConfig);
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig, index?: number) {
+		super(waypoints, pathConfig, index);
 	}
 
-	protected generate(): void {
+	protected generate(index?: number): void {
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
-			const line = this.generateLine(this.waypoints[i], this.waypoints[i + 1]);
+			const line = this.generateLine(this.waypoints[i], this.waypoints[i + 1], index || i);
 			const segments = this.generateSegments(line, i);
 			const setpoints = this.generateSetpoints(segments, this._distance);
 			const coords = this.generateCoords(setpoints);
@@ -43,7 +43,7 @@ export default class LineTrajectory extends Trajectory {
 		return segments;
 	}
 
-	protected generateLine(startWaypoint: Waypoint, endWaypoint: Waypoint): Line {
+	protected generateLine(startWaypoint: Waypoint, endWaypoint: Waypoint, index: number): Line {
 		let line = undefined;
 		try {
 			line = new Line(
@@ -55,8 +55,7 @@ export default class LineTrajectory extends Trajectory {
 			);
 			return line;
 		} catch (error) {
-			if (error instanceof PathGeneratorError && line instanceof Line)
-				error.problem = `Line ${line.getInfo()} is illegal`;
+			if (error instanceof PathGeneratorError) error.addErrorPosition(index);
 			throw error;
 		}
 	}

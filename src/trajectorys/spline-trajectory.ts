@@ -6,14 +6,14 @@ import { PathConfig, Waypoint } from '..';
 import Trajectory from './trajectory';
 
 export default class SplineTrajectory extends Trajectory {
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
-		super(waypoints, pathConfig);
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig, index?: number) {
+		super(waypoints, pathConfig, index);
 	}
 
-	protected generate(): void {
+	protected generate(index?: number): void {
 		let lastPosition = 0;
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
-			const spline = this.generateSpline(this.waypoints[i], this.waypoints[i + 1]);
+			const spline = this.generateSpline(this.waypoints[i], this.waypoints[i + 1], index || i);
 			const segments = this.generateSegments(spline);
 			const setpoints = this.generateSetpoints(segments, lastPosition);
 			const coords = this.generateCoords(spline, setpoints, lastPosition);
@@ -24,14 +24,13 @@ export default class SplineTrajectory extends Trajectory {
 		}
 	}
 
-	protected generateSpline(startWaypoint: Waypoint, endWaypoint: Waypoint): Spline {
+	protected generateSpline(startWaypoint: Waypoint, endWaypoint: Waypoint, index: number): Spline {
 		let spline = undefined;
 		try {
 			spline = new Spline(startWaypoint, endWaypoint, this.pathConfig);
 			return spline;
 		} catch (error) {
-			if (error instanceof PathGeneratorError && spline instanceof Spline)
-				error.problem = `Spline ${startWaypoint.getInfo()} to ${endWaypoint.getInfo()} is illegal!`;
+			if (error instanceof PathGeneratorError) error.addErrorPosition(index);
 			throw error;
 		}
 	}

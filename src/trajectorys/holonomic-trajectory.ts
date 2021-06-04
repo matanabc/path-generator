@@ -23,7 +23,7 @@ export default class HolonomicTrajectory extends Trajectory {
 	protected generateHolonomicTrajectory(): void {
 		for (let index = 0; index < this.waypoints.length - 1; index++) {
 			const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
-			const splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig);
+			const splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig, index);
 			this.setpoints.push(...splineTrajectory.setpoints);
 			this.setZSetpoints(splineTrajectory, index);
 		}
@@ -48,7 +48,7 @@ export default class HolonomicTrajectory extends Trajectory {
 		);
 		const vMax = this.getVMax(trajectory.totalTime, distance);
 		const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
-		setpoints.push(...new TurnInPlaceTrajectory(waypoints, this.pathConfig, vMax).setpoints);
+		setpoints.push(...new TurnInPlaceTrajectory(waypoints, this.pathConfig, vMax, index).setpoints);
 		if (setpoints.length === 0) trajectory.setpoints.forEach(() => setpoints.push(new Setpoint()));
 		this.setCoords(trajectory.coords, setpoints, (<HolonomicWaypoint>this.waypoints[index]).robotAngle);
 		this._zSetpoints.push(...setpoints);

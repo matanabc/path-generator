@@ -44,9 +44,8 @@ export default class LineTrajectory extends Trajectory {
 	}
 
 	protected generateLine(startWaypoint: Waypoint, endWaypoint: Waypoint, index: number): Line {
-		let line = undefined;
 		try {
-			line = new Line(
+			const line = new Line(
 				endWaypoint.x - startWaypoint.x,
 				this.pathConfig.acc,
 				startWaypoint.v,

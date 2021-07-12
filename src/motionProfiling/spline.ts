@@ -24,6 +24,7 @@ export default class Spline extends Line {
 		this._pathConfig = pathConfig;
 		this._startPoint = startPoint;
 		this._endPoint = endPoint;
+		this._startPoint.vMax = Number(this.vMax.toFixed(3));
 	}
 
 	getPositionCoords(pos_relative: number): Coord {

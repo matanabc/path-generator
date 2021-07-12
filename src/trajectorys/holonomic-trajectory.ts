@@ -1,5 +1,6 @@
-import TurnInPlaceTrajectory from './turn-in-place-trajectory';
+import { RobotAngleIsUndefined } from '../motionProfiling/errors';
 import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
+import TurnInPlaceTrajectory from './turn-in-place-trajectory';
 import SplineTrajectory from './spline-trajectory';
 import Setpoint from '../motionProfiling/setpoint';
 import PathConfig from '../path/path-config';
@@ -40,12 +41,11 @@ export default class HolonomicTrajectory extends Trajectory {
 	}
 
 	protected setZSetpoints(trajectory: SplineTrajectory, index: number) {
-		let setpoints = [];
-		const distance = Util.angle2Distance(
-			(<HolonomicWaypoint>this.waypoints[index + 1]).robotAngle -
-				(<HolonomicWaypoint>this.waypoints[index]).robotAngle,
-			this.pathConfig.radios
-		);
+		const setpoints = [];
+		const startRobotAngle = (<HolonomicWaypoint>this.waypoints[index]).robotAngle;
+		const endRobotAngle = (<HolonomicWaypoint>this.waypoints[index + 1]).robotAngle;
+		if (startRobotAngle === undefined || endRobotAngle === undefined) throw new RobotAngleIsUndefined();
+		const distance = Util.angle2Distance(endRobotAngle - startRobotAngle, this.pathConfig.radios);
 		const vMax = this.getVMax(trajectory.totalTime, distance);
 		const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
 		setpoints.push(...new TurnInPlaceTrajectory(waypoints, this.pathConfig, vMax, index).setpoints);

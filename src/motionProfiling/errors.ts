@@ -30,10 +30,10 @@ export class SplineIsToLong extends PathGeneratorError {
 }
 
 export class VMaxSmallerThenVEnd extends PathGeneratorError {
-	constructor(V0: number, vEnd: number, vMax: number, newVMax: number) {
+	constructor(V0: number, vEnd: number, vMax: number) {
 		super(
 			'V max is smaller then V end',
-			`Decrease vEnd or increase vMax, try using vEnd ${vMax} or vMax ${newVMax.toFixed(3)}`,
+			`Decrease vEnd or increase vMax`,
 			`Can't get from v0 (${V0}) to vEnd (${vEnd}) because vMax (${vMax}) is smaller then vEnd (${vEnd})`
 		);
 	}
@@ -48,5 +48,10 @@ export class PathConfigValueEqualToZero extends PathGeneratorError {
 export class VMaxEqualToNaN extends PathGeneratorError {
 	constructor() {
 		super('V max equal to NaN', 'Decrease vMax or increase distance');
+	}
+}
+export class RobotAngleIsUndefined extends PathGeneratorError {
+	constructor() {
+		super('Robot angle is undefined', 'Change robot angle');
 	}
 }

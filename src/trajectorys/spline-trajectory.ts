@@ -25,9 +25,8 @@ export default class SplineTrajectory extends Trajectory {
 	}
 
 	protected generateSpline(startWaypoint: Waypoint, endWaypoint: Waypoint, index: number): Spline {
-		let spline = undefined;
 		try {
-			spline = new Spline(startWaypoint, endWaypoint, this.pathConfig);
+			const spline = new Spline(startWaypoint, endWaypoint, this.pathConfig);
 			return spline;
 		} catch (error) {
 			if (error instanceof PathGeneratorError) error.addErrorPosition(index);

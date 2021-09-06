@@ -20,7 +20,7 @@ export default class Path {
 		try {
 			this.generate();
 		} catch (error) {
-			this._error = error;
+			if (error instanceof PathGeneratorError) this._error = error;
 		}
 	}
 

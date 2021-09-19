@@ -1,6 +1,6 @@
-import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
 import TankModifier from '../modifier/tank-modifier';
 import Setpoint from '../motionProfiling/setpoint';
+import Coord from '../motionProfiling/coord';
 import { PathConfig, Waypoint } from '..';
 import Path from './path';
 
@@ -11,13 +11,10 @@ export default class TankPath extends Path {
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
-		this.modify();
-	}
-
-	protected modify(): void {
 		if (this.isIllegal()) return;
-		const turnAngle = this.isTurnInPlace() ? (<TurnInPlaceTrajectory>(<unknown>this._trajectory)).turnAngle : 0;
-		this._modifier = new TankModifier(this.sourceSetpoints, this.coords, this.pathConfig, turnAngle);
+		const startAngle = this.waypoints[0].angle;
+		this._modifier = new TankModifier(this.sourceSetpoints, this._trajectory.coords, startAngle, this.pathConfig);
+		this.isTurnInPlace() ? this._modifier.turnInPlace() : this._modifier.spline();
 		this._rightSetpoints = this._modifier.rightSetpoints;
 		this._leftSetpoints = this._modifier.leftSetpoints;
 	}
@@ -28,6 +25,10 @@ export default class TankPath extends Path {
 
 	get rightSetpoints(): Setpoint[] {
 		return this._rightSetpoints;
+	}
+
+	get coords(): Coord[] {
+		return this._modifier.coords;
 	}
 
 	changeDirection(): void {

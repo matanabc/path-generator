@@ -68,4 +68,8 @@ export default abstract class Trajectory {
 	get coords(): Coord[] {
 		return this._coords;
 	}
+
+	get distance(): number {
+		return this._distance;
+	}
 }

@@ -14,7 +14,7 @@ export default class Arc {
 	protected d: number = 0;
 	protected e: number = 0;
 
-	constructor(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig) {
+	constructor(startPoint: Waypoint, endPoint: Waypoint) {
 		this.fit_hermite_cubic(startPoint, endPoint);
 		this.calculateDistance();
 	}
@@ -69,6 +69,6 @@ export default class Arc {
 	}
 
 	get arc_length(): number {
-		return this._arc_length;
+		return Number.isNaN(this._arc_length) ? 0 : this._arc_length;
 	}
 }

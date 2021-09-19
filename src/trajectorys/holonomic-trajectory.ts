@@ -1,4 +1,3 @@
-import { RobotAngleIsUndefined } from '../motionProfiling/errors';
 import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
 import TurnInPlaceTrajectory from './turn-in-place-trajectory';
 import SplineTrajectory from './spline-trajectory';
@@ -10,56 +9,40 @@ import Trajectory from './trajectory';
 import { Util } from '..';
 
 export default class HolonomicTrajectory extends Trajectory {
-	protected _xSetpoints: Setpoint[] = [];
-	protected _ySetpoints: Setpoint[] = [];
-	protected _zSetpoints: Setpoint[] = [];
+	protected _turnsTrajectory: TurnInPlaceTrajectory[] = [];
+	protected _splinesTrajectory: SplineTrajectory[] = [];
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
 		this.generateHolonomicTrajectory();
 	}
 
-	protected generate() {}
+	protected generate(index?: number): void {}
 
 	protected generateHolonomicTrajectory(): void {
-		for (let index = 0; index < this.waypoints.length - 1; index++) {
+		const holonomicWaypoint = <HolonomicWaypoint[]>this.waypoints;
+		for (let index = 0; index < holonomicWaypoint.length - 1; index++) {
 			const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
-			const splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig, index);
-			this.setpoints.push(...splineTrajectory.setpoints);
-			this.setZSetpoints(splineTrajectory, index);
+			let turnTrajectory = new TurnInPlaceTrajectory(waypoints, this.pathConfig);
+			let splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig);
+			const robotAngle = Util.angle2Distance(holonomicWaypoint[index].robotAngle, this.pathConfig.radios);
+
+			if (turnTrajectory.setpoints.length > 0 && splineTrajectory.setpoints.length === 0) {
+				turnTrajectory.setpoints.forEach(() => splineTrajectory.setpoints.push(new Setpoint()));
+				splineTrajectory.coords.push(...turnTrajectory.coords);
+			} else if (turnTrajectory.setpoints.length === 0 && splineTrajectory.setpoints.length > 0)
+				splineTrajectory.setpoints.forEach(() => turnTrajectory.setpoints.push(new Setpoint(robotAngle, 0, 0)));
+			else if (turnTrajectory.totalTime > splineTrajectory.totalTime) {
+				waypoints[0].vMax = this.getVMax(turnTrajectory.totalTime, splineTrajectory.distance);
+				splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig);
+			} else if (turnTrajectory.totalTime < splineTrajectory.totalTime) {
+				waypoints[0].vMax = this.getVMax(splineTrajectory.totalTime, turnTrajectory.distance);
+				turnTrajectory = new TurnInPlaceTrajectory(waypoints, this.pathConfig);
+			}
+
+			this._splinesTrajectory.push(splineTrajectory);
+			this._turnsTrajectory.push(turnTrajectory);
 		}
-		this.setXYSetpoints();
-	}
-
-	protected setXYSetpoints(): void {
-		this._xSetpoints.push(new Setpoint());
-		this._ySetpoints.push(new Setpoint());
-		for (let i = 1; i < this.setpoints.length; i++) {
-			this._xSetpoints.push(this.getSetpoint(i, 'x', this._xSetpoints[i - 1].velocity));
-			this._ySetpoints.push(this.getSetpoint(i, 'y', this._ySetpoints[i - 1].velocity));
-		}
-	}
-
-	protected setZSetpoints(trajectory: SplineTrajectory, index: number) {
-		const setpoints = [];
-		const startRobotAngle = (<HolonomicWaypoint>this.waypoints[index]).robotAngle;
-		const endRobotAngle = (<HolonomicWaypoint>this.waypoints[index + 1]).robotAngle;
-		if (startRobotAngle === undefined || endRobotAngle === undefined) throw new RobotAngleIsUndefined();
-		const distance = Util.angle2Distance(endRobotAngle - startRobotAngle, this.pathConfig.radios);
-		const vMax = this.getVMax(trajectory.totalTime, distance);
-		const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
-		setpoints.push(...new TurnInPlaceTrajectory(waypoints, this.pathConfig, vMax, index).setpoints);
-		if (setpoints.length === 0) trajectory.setpoints.forEach(() => setpoints.push(new Setpoint()));
-		this.setCoords(trajectory.coords, setpoints, (<HolonomicWaypoint>this.waypoints[index]).robotAngle);
-		this._zSetpoints.push(...setpoints);
-	}
-
-	protected setCoords(coords: Coord[], setpoints: Setpoint[], lastAngle: number): void {
-		coords.forEach((coord, index) => {
-			const position = setpoints[index].position;
-			coord.angle = Util.d2r(Util.distance2Angle(position, this.pathConfig.radios) + lastAngle);
-		});
-		this._coords.push(...coords);
 	}
 
 	protected getVMax(totalTime: number, distance: number): number {
@@ -78,15 +61,11 @@ export default class HolonomicTrajectory extends Trajectory {
 		return setpoint;
 	}
 
-	get xSetpoints(): Setpoint[] {
-		return this._xSetpoints;
+	get turnsTrajectory(): TurnInPlaceTrajectory[] {
+		return this._turnsTrajectory;
 	}
 
-	get ySetpoints(): Setpoint[] {
-		return this._ySetpoints;
-	}
-
-	get zSetpoints(): Setpoint[] {
-		return this._zSetpoints;
+	get splinesTrajectory(): SplineTrajectory[] {
+		return this._splinesTrajectory;
 	}
 }

@@ -12,7 +12,7 @@ export default class Spline extends Line {
 	protected _arc: Arc;
 
 	constructor(startPoint: Waypoint, endPoint: Waypoint, pathConfig: PathConfig) {
-		const arc = new Arc(startPoint, endPoint, pathConfig);
+		const arc = new Arc(startPoint, endPoint);
 		super(
 			Math.abs(arc.arc_length),
 			Math.abs(pathConfig.acc),

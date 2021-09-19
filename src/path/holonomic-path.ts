@@ -1,54 +1,36 @@
-import TurnInPlaceTrajectory from '../trajectorys/turn-in-place-trajectory';
 import HolonomicTrajectory from '../trajectorys/holonomic-trajectory';
 import HolonomicWaypoint from '../waypoints/holonomic-waypoint';
+import HolonomicModifier from '../modifier/holonomic-modifier';
 import Setpoint from '../motionProfiling/setpoint';
 import { PathConfig } from '..';
 import Path from './path';
 
 export default class HolonomicPath extends Path {
-	protected _xSetpoints: Setpoint[] = [];
-	protected _ySetpoints: Setpoint[] = [];
-	protected _zSetpoints: Setpoint[] = [];
+	protected _modifier: HolonomicModifier = {} as HolonomicModifier;
 
 	constructor(waypoints: HolonomicWaypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
-		this.setSetpoints();
+		if (this.isIllegal()) return;
+		this._modifier = new HolonomicModifier(this.pathConfig, <HolonomicTrajectory>this._trajectory);
 	}
 
 	protected generate(): void {
-		if (TurnInPlaceTrajectory.isTurnInPlace(this.waypoints))
-			this._trajectory = new TurnInPlaceTrajectory(this.waypoints, this.pathConfig);
-		else this._trajectory = new HolonomicTrajectory(this.waypoints, this.pathConfig);
-	}
-
-	protected setSetpoints() {
-		if (this.isIllegal()) return;
-		else if (this.isTurnInPlace()) {
-			this._zSetpoints = this._trajectory.setpoints;
-			const setpoints = this.zSetpoints.map(() => new Setpoint());
-			this._xSetpoints = setpoints;
-			this._ySetpoints = setpoints;
-		} else {
-			const trajectory = <HolonomicTrajectory>this._trajectory;
-			this._xSetpoints = trajectory.xSetpoints;
-			this._ySetpoints = trajectory.ySetpoints;
-			this._zSetpoints = trajectory.zSetpoints;
-		}
+		this._trajectory = new HolonomicTrajectory(this.waypoints, this.pathConfig);
 	}
 
 	get xSetpoints(): Setpoint[] {
-		return this._xSetpoints;
+		return this._modifier.xSetpoints;
 	}
 
 	get ySetpoints(): Setpoint[] {
-		return this._ySetpoints;
+		return this._modifier.ySetpoints;
 	}
 
 	get zSetpoints(): Setpoint[] {
-		return this._zSetpoints;
+		return this._modifier.zSetpoints;
 	}
 
 	get coords() {
-		return this._trajectory.coords;
+		return this._modifier.coords;
 	}
 }

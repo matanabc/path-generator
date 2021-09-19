@@ -38,7 +38,7 @@ export default class Segment {
 	}
 
 	get totalTime(): number {
-		return this._totalTime;
+		return Number.isNaN(this._totalTime) ? 0 : this._totalTime;
 	}
 
 	get distance(): number {

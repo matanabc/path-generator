@@ -62,8 +62,4 @@ export default class LineTrajectory extends Trajectory {
 	generateCoords(setpoints: Setpoint[]): Coord[] {
 		return setpoints.map(() => new Coord(0, 0, 0));
 	}
-
-	get distance(): number {
-		return this._distance;
-	}
 }

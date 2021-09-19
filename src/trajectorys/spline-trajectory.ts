@@ -11,13 +11,12 @@ export default class SplineTrajectory extends Trajectory {
 	}
 
 	protected generate(index?: number): void {
-		let lastPosition = 0;
 		for (let i = 0; i < this.waypoints.length - 1; i++) {
 			const spline = this.generateSpline(this.waypoints[i], this.waypoints[i + 1], index || i);
 			const segments = this.generateSegments(spline);
-			const setpoints = this.generateSetpoints(segments, lastPosition);
-			const coords = this.generateCoords(spline, setpoints, lastPosition);
-			lastPosition += spline.distance;
+			const setpoints = this.generateSetpoints(segments, this._distance);
+			const coords = this.generateCoords(spline, setpoints, this._distance);
+			this._distance += spline.distance;
 			this._setpoints.push(...setpoints);
 			this._segments.push(...segments);
 			this._coords.push(...coords);
@@ -26,8 +25,7 @@ export default class SplineTrajectory extends Trajectory {
 
 	protected generateSpline(startWaypoint: Waypoint, endWaypoint: Waypoint, index: number): Spline {
 		try {
-			const spline = new Spline(startWaypoint, endWaypoint, this.pathConfig);
-			return spline;
+			return new Spline(startWaypoint, endWaypoint, this.pathConfig);
 		} catch (error) {
 			if (error instanceof PathGeneratorError) error.addErrorPosition(index);
 			throw error;

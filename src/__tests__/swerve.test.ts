@@ -1,4 +1,4 @@
-import { Holonomic, Util } from '../index';
+import { Holonomic } from '../index';
 import HolonomicPath from '../path/holonomic-path';
 
 const { Path, PathConfig, Waypoint } = Holonomic;
@@ -106,7 +106,7 @@ test('/ » path', () => {
 		expect(coord.y).toBeGreaterThanOrEqual(0);
 		expect(coord.x).toBeGreaterThanOrEqual(0);
 	});
-	expect(Util.r2d(path.coords[path.coords.length - 1].angle)).toBeCloseTo(180, 0.05);
+	expect(path.coords[path.coords.length - 1].angle).toBeCloseTo(180, 0.05);
 });
 
 test('\\ « path', () => {
@@ -130,11 +130,11 @@ test('\\ « path', () => {
 		expect(coord.y).toBeGreaterThanOrEqual(0);
 		expect(coord.x).toBeLessThanOrEqual(0);
 	});
-	expect(Util.r2d(path.coords[path.coords.length - 1].angle)).toBeCloseTo(-180, 0.05);
+	expect(path.coords[path.coords.length - 1].angle).toBeCloseTo(-180, 0.05);
 });
 
 test('0 » path', () => {
-	const waypoints = [new Waypoint(0, 0, 0, 0, 0, 2), new Waypoint(0, 0, 0, 180, 0, 0)];
+	const waypoints = [new Waypoint(2, 2, 0, 0, 0, 2), new Waypoint(2, 2, 0, 180, 0, 0)];
 	const path = new Path(waypoints, pathConfig);
 	basicPathCheck(path);
 	path.zSetpoints.forEach((setpoint) => {
@@ -144,19 +144,19 @@ test('0 » path', () => {
 	path.xSetpoints.forEach((setpoint) => {
 		expect(setpoint.acceleration).toBe(0);
 		expect(setpoint.velocity).toBe(0);
-		expect(setpoint.position).toBe(0);
+		expect(setpoint.position).toBe(2);
 	});
 	path.ySetpoints.forEach((setpoint) => {
 		expect(setpoint.acceleration).toBe(0);
 		expect(setpoint.velocity).toBe(0);
-		expect(setpoint.position).toBe(0);
+		expect(setpoint.position).toBe(2);
 	});
 	path.coords.forEach((coord) => {
 		expect(coord.angle).toBeGreaterThanOrEqual(0);
-		expect(coord.y).toBe(0);
-		expect(coord.x).toBe(0);
+		expect(coord.y).toBe(2);
+		expect(coord.x).toBe(2);
 	});
-	expect(Util.r2d(path.coords[path.coords.length - 1].angle)).toBeCloseTo(180, 0.05);
+	expect(path.coords[path.coords.length - 1].angle).toBeCloseTo(180, 0.05);
 });
 
 test('0 « path', () => {
@@ -182,5 +182,5 @@ test('0 « path', () => {
 		expect(coord.y).toBe(0);
 		expect(coord.x).toBe(0);
 	});
-	expect(Util.r2d(path.coords[path.coords.length - 1].angle)).toBeCloseTo(-180, 0.05);
+	expect(path.coords[path.coords.length - 1].angle).toBeCloseTo(-180, 0.05);
 });

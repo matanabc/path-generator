@@ -14,7 +14,7 @@ export default class TurnInPlaceTrajectory extends LineTrajectory {
 		const x = Math.abs(waypoints[0].x + Util.angle2Distance(Math.abs(turnAngle), pathConfig.radios));
 		const startWaypoint = new Waypoint(waypoints[0].x, waypoints[0].y, 0, 0, vMax);
 		const endWaypoint = new Waypoint(x, waypoints[0].y, 0, 0, 0);
-		super([startWaypoint, endWaypoint], pathConfig, index);
+		super([startWaypoint, endWaypoint], pathConfig);
 		if (turnAngle < 0) this.setpoints.forEach((setpoint) => setpoint.changeDirection());
 		this._turnInPlaceAngle = turnAngle;
 		this.updateCoord(waypoints[0]);

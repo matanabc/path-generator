@@ -8,21 +8,20 @@ import { PathConfig, Waypoint } from '..';
 import Trajectory from './trajectory';
 
 export default class LineTrajectory extends Trajectory {
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig, index?: number) {
-		super(waypoints, pathConfig, index);
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
+		super(waypoints, pathConfig);
+		this.generateTrajectory();
 	}
 
-	protected generate(index?: number): void {
-		for (let i = 0; i < this.waypoints.length - 1; i++) {
-			const line = this.generateLine(this.waypoints[i], this.waypoints[i + 1], index || i);
-			const segments = this.generateSegments(line, i);
-			const setpoints = this.generateSetpoints(segments, this._distance);
-			const coords = this.generateCoords(setpoints);
-			this._distance += line.distance;
-			this._setpoints.push(...setpoints);
-			this._segments.push(...segments);
-			this._coords.push(...coords);
-		}
+	protected generate(index: number): void {
+		const line = this.generateLine(this.waypoints[index], this.waypoints[index + 1]);
+		const segments = this.generateSegments(line, index);
+		const setpoints = this.generateSetpoints(segments, this._distance);
+		const coords = this.generateCoords(setpoints);
+		this._distance += line.distance;
+		this._setpoints.push(...setpoints);
+		this._segments.push(...segments);
+		this._coords.push(...coords);
 	}
 
 	protected generateSegments(object: Line, index: number = 0): Segment[] {
@@ -43,23 +42,12 @@ export default class LineTrajectory extends Trajectory {
 		return segments;
 	}
 
-	protected generateLine(startWaypoint: Waypoint, endWaypoint: Waypoint, index: number): Line {
-		try {
-			const line = new Line(
-				endWaypoint.x - startWaypoint.x,
-				this.pathConfig.acc,
-				startWaypoint.v,
-				endWaypoint.v,
-				startWaypoint.vMax
-			);
-			return line;
-		} catch (error) {
-			if (error instanceof PathGeneratorError) error.addErrorPosition(index);
-			throw error;
-		}
+	protected generateLine(startWaypoint: Waypoint, endWaypoint: Waypoint): Line {
+		const distance = endWaypoint.x - startWaypoint.x;
+		return new Line(distance, this.pathConfig.acc, startWaypoint.v, endWaypoint.v, startWaypoint.vMax);
 	}
 
-	generateCoords(setpoints: Setpoint[]): Coord[] {
+	protected generateCoords(setpoints: Setpoint[]): Coord[] {
 		return setpoints.map(() => new Coord(0, 0, 0));
 	}
 }

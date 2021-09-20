@@ -1,4 +1,4 @@
-import { PathConfigValueEqualToZero } from '../motionProfiling/errors';
+import { PathConfigValueEqualToZero, PathGeneratorError } from '../motionProfiling/errors';
 import Setpoint from '../motionProfiling/setpoint';
 import Segment from '../motionProfiling/segment';
 import Coord from '../motionProfiling/coord';
@@ -14,14 +14,24 @@ export default abstract class Trajectory {
 	protected pathConfig: PathConfig;
 	protected waypoints: Waypoint[];
 
-	constructor(waypoints: Waypoint[], pathConfig: PathConfig, index?: number) {
+	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		this.pathConfig = pathConfig;
 		this.waypoints = waypoints;
 		this.checkPathConfig();
-		this.generate(index);
 	}
 
-	protected abstract generate(index?: number): void;
+	protected generateTrajectory(): void {
+		for (let index = 0; index < this.waypoints.length - 1; index++) {
+			try {
+				this.generate(index);
+			} catch (error) {
+				if (error instanceof PathGeneratorError) error.addErrorPosition(index);
+				throw error;
+			}
+		}
+	}
+
+	protected abstract generate(index: number): void;
 
 	protected checkPathConfig(): void {
 		if (this.pathConfig.acc === 0) throw new PathConfigValueEqualToZero('acc');
@@ -29,7 +39,7 @@ export default abstract class Trajectory {
 		else if (this.pathConfig.robotLoopTime === 0) throw new PathConfigValueEqualToZero('robot loop time');
 	}
 
-	protected generateSegments(object: Line, index: number = 0): Segment[] {
+	protected generateSegments(object: Line): Segment[] {
 		const speeding2vMax = new Segment(object.V0, object.vMax, object.acc);
 		const slowing2vEnd = new Segment(object.vMax, object.vEnd, object.acc);
 		const speedingAndSlowingDistance = speeding2vMax.distance + slowing2vEnd.distance;

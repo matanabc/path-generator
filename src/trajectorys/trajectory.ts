@@ -8,11 +8,11 @@ import { PathConfig, Waypoint } from '..';
 export default abstract class Trajectory {
 	protected _setpoints: Setpoint[] = [];
 	protected _segments: Segment[] = [];
-	protected _coords: Coord[] = [];
-	protected _distance: number = 0;
-
 	protected pathConfig: PathConfig;
+	protected _coords: Coord[] = [];
 	protected waypoints: Waypoint[];
+	protected setpointTime = 0;
+	protected _distance = 0;
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		this.pathConfig = pathConfig;
@@ -51,18 +51,17 @@ export default abstract class Trajectory {
 	}
 
 	protected generateSetpoints(segments: Segment[], startPosition: number): Setpoint[] {
-		let time = 0;
-		let lastPos = startPosition;
 		const setpoints = [];
+		let lastPos = startPosition;
 		const robotLoopTime = this.pathConfig.robotLoopTime;
 		for (let i = 0; i < segments.length; i++) {
 			if (segments[i].distance === 0) continue;
-			for (; time < segments[i].totalTime; time += robotLoopTime) {
-				const setpoint = segments[i].getSetpoint(time, lastPos);
+			for (; this.setpointTime <= segments[i].totalTime; this.setpointTime += robotLoopTime) {
+				const setpoint = segments[i].getSetpoint(this.setpointTime, lastPos);
 				setpoints.push(setpoint);
 			}
 			lastPos += segments[i].distance;
-			time = time - segments[i].totalTime;
+			this.setpointTime -= segments[i].totalTime;
 		}
 		return setpoints;
 	}

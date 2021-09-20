@@ -18,11 +18,14 @@ export default class HolonomicModifier {
 		this.updateCoordAngle(0);
 		this._xSetpoints.push(new Setpoint(this._coords[0].x));
 		this._ySetpoints.push(new Setpoint(this._coords[0].y));
-		for (let index = 1; index < this._coords.length; index++) {
+		const length = Math.min(this._zSetpoints.length, this._coords.length);
+		for (let index = 1; index < length; index++) {
 			this._xSetpoints.push(this.getSetpoint(index, 'x', this._xSetpoints[index - 1].velocity));
 			this._ySetpoints.push(this.getSetpoint(index, 'y', this._ySetpoints[index - 1].velocity));
 			this.updateCoordAngle(index);
 		}
+		this._zSetpoints.splice(length);
+		this._coords.splice(length);
 	}
 
 	protected updateCoordAngle(index: number): void {

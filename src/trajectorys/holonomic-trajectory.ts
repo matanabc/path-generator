@@ -22,16 +22,17 @@ export default class HolonomicTrajectory extends Trajectory {
 	protected generateHolonomicTrajectory(): void {
 		const holonomicWaypoint = <HolonomicWaypoint[]>this.waypoints;
 		for (let index = 0; index < holonomicWaypoint.length - 1; index++) {
-			const waypoints = [this.waypoints[index], this.waypoints[index + 1]];
+			const waypoints = [
+				Object.assign(new HolonomicWaypoint(), this.waypoints[index]),
+				Object.assign(new HolonomicWaypoint(), this.waypoints[index + 1]),
+			];
 			let turnTrajectory = new TurnInPlaceTrajectory(waypoints, this.pathConfig);
 			let splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig);
-			const robotAngle = Util.angle2Distance(holonomicWaypoint[index].robotAngle, this.pathConfig.radios);
-
 			if (turnTrajectory.setpoints.length > 0 && splineTrajectory.setpoints.length === 0) {
 				turnTrajectory.setpoints.forEach(() => splineTrajectory.setpoints.push(new Setpoint()));
 				splineTrajectory.coords.push(...turnTrajectory.coords);
 			} else if (turnTrajectory.setpoints.length === 0 && splineTrajectory.setpoints.length > 0)
-				splineTrajectory.setpoints.forEach(() => turnTrajectory.setpoints.push(new Setpoint(robotAngle, 0, 0)));
+				splineTrajectory.setpoints.forEach(() => turnTrajectory.setpoints.push(new Setpoint()));
 			else if (turnTrajectory.totalTime > splineTrajectory.totalTime) {
 				waypoints[0].vMax = this.getVMax(turnTrajectory.totalTime, splineTrajectory.distance);
 				splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig);
@@ -39,7 +40,8 @@ export default class HolonomicTrajectory extends Trajectory {
 				waypoints[0].vMax = this.getVMax(splineTrajectory.totalTime, turnTrajectory.distance);
 				turnTrajectory = new TurnInPlaceTrajectory(waypoints, this.pathConfig);
 			}
-
+			const robotAngle = Util.angle2Distance(holonomicWaypoint[index].robotAngle, this.pathConfig.radios);
+			turnTrajectory.setpoints.forEach((setpoint) => (setpoint.position += robotAngle));
 			this._splinesTrajectory.push(splineTrajectory);
 			this._turnsTrajectory.push(turnTrajectory);
 		}

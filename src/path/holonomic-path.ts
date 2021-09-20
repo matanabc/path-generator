@@ -19,18 +19,18 @@ export default class HolonomicPath extends Path {
 	}
 
 	get xSetpoints(): Setpoint[] {
-		return this._modifier.xSetpoints;
+		return this._modifier.xSetpoints || [];
 	}
 
 	get ySetpoints(): Setpoint[] {
-		return this._modifier.ySetpoints;
+		return this._modifier.ySetpoints || [];
 	}
 
 	get zSetpoints(): Setpoint[] {
-		return this._modifier.zSetpoints;
+		return this._modifier.zSetpoints || [];
 	}
 
 	get coords() {
-		return this._modifier.coords;
+		return this._modifier.coords || [];
 	}
 }

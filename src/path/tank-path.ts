@@ -20,15 +20,15 @@ export default class TankPath extends Path {
 	}
 
 	get leftSetpoints(): Setpoint[] {
-		return this._leftSetpoints;
+		return this._leftSetpoints || [];
 	}
 
 	get rightSetpoints(): Setpoint[] {
-		return this._rightSetpoints;
+		return this._rightSetpoints || [];
 	}
 
 	get coords(): Coord[] {
-		return this._modifier.coords;
+		return this._modifier.coords || [];
 	}
 
 	changeDirection(): void {

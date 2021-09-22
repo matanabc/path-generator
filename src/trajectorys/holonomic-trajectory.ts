@@ -15,15 +15,12 @@ export default class HolonomicTrajectory extends Trajectory {
 
 	constructor(waypoints: Waypoint[], pathConfig: PathConfig) {
 		super(waypoints, pathConfig);
-		this.holonomicWaypoint = <HolonomicWaypoint[]>this.waypoints;
+		this.holonomicWaypoint = Util.copy(HolonomicWaypoint, this.waypoints);
 		this.generateTrajectory();
 	}
 
 	protected generate(index: number): void {
-		const waypoints = [
-			Object.assign(new HolonomicWaypoint(), this.waypoints[index]),
-			Object.assign(new HolonomicWaypoint(), this.waypoints[index + 1]),
-		];
+		const waypoints = [this.holonomicWaypoint[index], this.holonomicWaypoint[index + 1]];
 		let turnTrajectory = new TurnInPlaceTrajectory(waypoints, this.pathConfig);
 		let splineTrajectory = new SplineTrajectory(waypoints, this.pathConfig);
 		if (turnTrajectory.setpoints.length > 0 && splineTrajectory.setpoints.length === 0) {

@@ -37,3 +37,11 @@ export function angle2Distance(angle: number, width: number): number {
 export function distance2Angle(distance: number, width: number): number {
 	return r2d((distance / width) * 2);
 }
+
+export function copy(type: any, objects: any[]) {
+	return objects.map((object) => Object.assign(new type(), object));
+}
+
+export function deepCopy(value: object | any[]) {
+	return JSON.parse(JSON.stringify(value));
+}

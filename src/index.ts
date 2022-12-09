@@ -1,23 +1,15 @@
-import HolonomicWaypoint from './waypoints/holonomic-waypoint';
-import HolonomicPath from './path/holonomic-path';
-import Waypoint from './waypoints/waypoint';
-import PathConfig from './path/path-config';
-import TankPath from './path/tank-path';
-import * as Util from './util';
-import Path from './path/path';
+export * as PathGeneratorMotionProfiling from './motion_profiling';
+export * as PathGeneratorGenerates from './generate';
+export * as PathGeneratorModifiers from './modifier';
+export * as PathGeneratorErrors from './errors';
+export * as PathGeneratorTypes from './types';
+export * as PathGeneratorUtils from './utils';
 
-const Tank = {
-	Path: TankPath,
-	PathConfig,
-	Waypoint,
-};
+export * from './motion_profiling';
+export * from './generate';
+export * from './modifier';
+export * from './errors';
+export * from './types';
+export * from './utils';
 
-const Holonomic = {
-	Waypoint: HolonomicWaypoint,
-	Path: HolonomicPath,
-	PathConfig,
-};
-
-const driveTypes = ['Tank', 'Holonomic'];
-
-export { PathConfig, Waypoint, Path, Util, Tank, Holonomic, driveTypes };
+export { default as Trajectory } from './trajectory';

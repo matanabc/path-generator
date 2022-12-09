@@ -1,7 +1,5 @@
-import PathConfig from '../path/path-config';
-import Waypoint from '../waypoints/waypoint';
-import { boundRadians, d2r } from '../util';
-import Coord from './coord';
+import { Coord, Waypoint } from '../types';
+import { boundRadians, degreesToRadians } from '../utils';
 
 export default class Arc {
 	protected sampleCount: number = 100000;
@@ -14,19 +12,16 @@ export default class Arc {
 	protected d: number = 0;
 	protected e: number = 0;
 
-	constructor(startPoint: Waypoint, endPoint: Waypoint) {
+	public constructor(startPoint: Waypoint, endPoint: Waypoint) {
 		this.fit_hermite_cubic(startPoint, endPoint);
 		this.calculateDistance();
 	}
 
 	private fit_hermite_cubic(startPoint: Waypoint, endPoint: Waypoint): void {
-		this.knot_distance = Math.sqrt(
-			(endPoint.x - startPoint.x) * (endPoint.x - startPoint.x) +
-				(endPoint.y - startPoint.y) * (endPoint.y - startPoint.y)
-		);
+		this.knot_distance = Math.sqrt(Math.pow(endPoint.x - startPoint.x, 2) + Math.pow(endPoint.y - startPoint.y, 2));
 		this.angle_offset = Math.atan2(endPoint.y - startPoint.y, endPoint.x - startPoint.x);
-		const a0_delta = Math.tan(boundRadians(d2r(startPoint.angle) - this.angle_offset));
-		const a1_delta = Math.tan(boundRadians(d2r(endPoint.angle) - this.angle_offset));
+		const a0_delta = Math.tan(boundRadians(degreesToRadians(startPoint.heading) - this.angle_offset));
+		const a1_delta = Math.tan(boundRadians(degreesToRadians(endPoint.heading) - this.angle_offset));
 		this.c = (a0_delta + a1_delta) / (this.knot_distance * this.knot_distance);
 		this.d = -(2 * a0_delta + a1_delta) / this.knot_distance;
 		this.e = a0_delta;
@@ -55,20 +50,20 @@ export default class Arc {
 		return (3 * this.c * x + 2 * this.d) * x + this.e;
 	}
 
-	getPositionCoords(pos_relative: number): Coord {
+	public getPositionCoords(pos_relative: number): Coord {
 		const percentage = pos_relative / this._arc_length;
 		const x = percentage * this.knot_distance;
 		const y = (this.c * x + this.d) * (x * x) + this.e * x;
 		const cos_theta = Math.cos(this.angle_offset);
 		const sin_theta = Math.sin(this.angle_offset);
-		return new Coord(
-			x * cos_theta - y * sin_theta + this.x_offset,
-			x * sin_theta + y * cos_theta + this.y_offset,
-			Math.atan(this.deriv(percentage)) + this.angle_offset
-		);
+		return {
+			x: x * cos_theta - y * sin_theta + this.x_offset,
+			y: x * sin_theta + y * cos_theta + this.y_offset,
+			z: Math.atan(this.deriv(percentage)) + this.angle_offset,
+		};
 	}
 
-	get arc_length(): number {
+	public get arc_length(): number {
 		return Number.isNaN(this._arc_length) ? 0 : this._arc_length;
 	}
 }

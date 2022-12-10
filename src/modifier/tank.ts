@@ -3,19 +3,27 @@ import { Waypoint, Robot, Setpoint, Coord } from '../types';
 import { changeSetpointDirection, degreesToRadians, mergeSetpoints, radiansToDegrees } from '../utils';
 import Modifier from './modifier';
 
-export default class TankModifier implements Modifier {
+export default class TankModifier extends Modifier {
 	protected _rightSetpoints: Setpoint[] = [];
 	protected _leftSetpoints: Setpoint[] = [];
 	protected _rightCoords: Coord[] = [];
 	protected _leftCoords: Coord[] = [];
-	protected _coords: Coord[] = [];
 	protected _angle: number[] = [];
 
-	modify({ splineSetpoints, lineSetpoints, coords }: Trajectory, waypoints: Waypoint[], robot: Robot): void {
+	constructor(trajectory: Trajectory, waypoints: Waypoint[], robot: Robot) {
+		super();
+		this.modify(trajectory, waypoints, robot);
+	}
+
+	protected modify(
+		{ splineSetpoints, lineSetpoints, coords }: Trajectory,
+		waypoints: Waypoint[],
+		robot: Robot
+	): void {
 		coords.forEach((coord, index) => {
 			this.splineModify(splineSetpoints[index], coord, robot, index);
 			this.lineModify(lineSetpoints[index], index);
-			this.updateAngle(coord, index, waypoints[0].heading, robot);
+			this.updateAngle(index, waypoints[0].z === undefined ? waypoints[0].heading : waypoints[0].z, robot);
 		});
 	}
 
@@ -24,7 +32,7 @@ export default class TankModifier implements Modifier {
 		this._rightSetpoints.push({ ...setpoint });
 		this._leftCoords.push(this.getCoord(coord, width));
 		this._rightCoords.push(this.getCoord(coord, -width));
-		if (index > 0) {
+		if (index > 0 && setpoint.velocity !== 0) {
 			this.calculateSetpoint(this._leftSetpoints, this._leftCoords, index, loopTime);
 			this.calculateSetpoint(this._rightSetpoints, this._rightCoords, index, loopTime);
 		}
@@ -57,11 +65,9 @@ export default class TankModifier implements Modifier {
 		setpoint.acceleration = (setpoint.velocity - lastSetpoint.velocity) / loopTime;
 	}
 
-	protected updateAngle(coord: Coord, index: number, startAngle: number, { width }: Robot): void {
+	protected updateAngle(index: number, startAngle: number, { width }: Robot): void {
 		const distance = this._rightSetpoints[index].position - this._leftSetpoints[index].position;
-		const angle = startAngle + radiansToDegrees(distance / width);
-		this._coords.push({ ...coord, z: angle });
-		this._angle.push(angle);
+		this._angle.push(startAngle + radiansToDegrees(distance / width));
 	}
 
 	get left(): Setpoint[] {
@@ -74,9 +80,5 @@ export default class TankModifier implements Modifier {
 
 	get angle(): number[] {
 		return this._angle;
-	}
-
-	get coords(): Coord[] {
-		return this._coords;
 	}
 }

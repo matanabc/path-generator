@@ -42,11 +42,6 @@ export class MaxVelocityEqualToNaNError extends PathGeneratorBaseError {
 		super('Max velocity equal to NaN', 'Decrease max velocity or increase distance');
 	}
 }
-export class RobotAngleIsUndefinedError extends PathGeneratorBaseError {
-	public constructor() {
-		super('Robot angle is undefined', 'Change robot angle');
-	}
-}
 
 export class RobotValueEqualToZeroError extends PathGeneratorBaseError {
 	public constructor(value: string) {

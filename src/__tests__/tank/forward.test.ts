@@ -1,15 +1,17 @@
-import { Waypoint, PathGenerator, TankModifier } from '../..';
-import { robot } from '../utils';
+import { Waypoint, Trajectory, TankModifier } from '../..';
+import { robot, trajectoryCheck, tankModifierCheck } from '../';
 
 test('tank - path', () => {
 	const waypoints: Waypoint[] = [
 		{ x: 0, y: 0, heading: 0, velocity: 0, maxVelocity: 1 },
 		{ x: 2, y: 0, heading: 0, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, TankModifier);
-	const modifier = path.modifier as TankModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new TankModifier(trajectory, waypoints, robot);
 
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	tankModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.left[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.left[i].velocity).toBeLessThanOrEqual(1);
 		expect(modifier.left[i].position).toBeGreaterThanOrEqual(0);
@@ -29,10 +31,12 @@ test('tank | path', () => {
 		{ x: 0, y: 0, heading: 90, velocity: 0, maxVelocity: 1 },
 		{ x: 0, y: -2, heading: 90, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, TankModifier);
-	const modifier = path.modifier as TankModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new TankModifier(trajectory, waypoints, robot);
 
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	tankModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.left[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.left[i].velocity).toBeLessThanOrEqual(1);
 		expect(modifier.left[i].position).toBeGreaterThanOrEqual(0);
@@ -52,10 +56,12 @@ test('tank / path', () => {
 		{ x: 0, y: 0, heading: 45, velocity: 0, maxVelocity: 1 },
 		{ x: 2, y: 2, heading: 45, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, TankModifier);
-	const modifier = path.modifier as TankModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new TankModifier(trajectory, waypoints, robot);
 
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	tankModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.left[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.left[i].velocity).toBeLessThanOrEqual(1);
 		expect(modifier.left[i].position).toBeGreaterThanOrEqual(0);
@@ -73,10 +79,12 @@ test('tank \\ path', () => {
 		{ x: 0, y: 0, heading: -45, velocity: 0, maxVelocity: 1 },
 		{ x: 2, y: -2, heading: -45, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, TankModifier);
-	const modifier = path.modifier as TankModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new TankModifier(trajectory, waypoints, robot);
 
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	tankModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.left[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.left[i].velocity).toBeLessThanOrEqual(1);
 		expect(modifier.left[i].position).toBeGreaterThanOrEqual(0);
@@ -94,10 +102,12 @@ test('tank ( path', () => {
 		{ x: 0, y: 0, heading: 0, velocity: 0, maxVelocity: 1 },
 		{ x: 2, y: 2, heading: 90, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, TankModifier);
-	const modifier = path.modifier as TankModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new TankModifier(trajectory, waypoints, robot);
 
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	tankModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.left[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.left[i].position).toBeGreaterThanOrEqual(0);
 
@@ -114,10 +124,12 @@ test('tank ) path', () => {
 		{ x: 0, y: 0, heading: 0, velocity: 0, maxVelocity: 1 },
 		{ x: 2, y: -2, heading: -90, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, TankModifier);
-	const modifier = path.modifier as TankModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new TankModifier(trajectory, waypoints, robot);
 
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	tankModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.left[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.left[i].position).toBeGreaterThanOrEqual(0);
 

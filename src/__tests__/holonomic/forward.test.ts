@@ -1,17 +1,17 @@
-import { Waypoint, PathGenerator, HolonomicModifier } from '../../';
-import { robot } from '../utils';
-import { basicPathCheck } from './utils';
+import { Waypoint, Trajectory, HolonomicModifier } from '../../';
+import { holonomicModifierCheck, robot, trajectoryCheck } from '../';
 
 test('holonomic - path (forward)', () => {
 	const waypoints: Waypoint[] = [
 		{ x: 0, y: 0, z: 0, heading: 0, velocity: 0, maxVelocity: 1 },
 		{ x: 2, y: 0, z: 0, heading: 0, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, HolonomicModifier);
-	const modifier = path.modifier as HolonomicModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new HolonomicModifier(trajectory, waypoints, robot);
 
-	basicPathCheck(path);
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	holonomicModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.x[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].velocity).toBeLessThanOrEqual(1);
 		expect(modifier.x[i].position).toBeGreaterThanOrEqual(0);
@@ -32,11 +32,12 @@ test('holonomic | path (forward)', () => {
 		{ x: 0, y: 0, z: 0, heading: 90, velocity: 0, maxVelocity: 1 },
 		{ x: 0, y: 2, z: 0, heading: 90, velocity: 0, maxVelocity: 1 },
 	];
-	const path = new PathGenerator(waypoints, robot, HolonomicModifier);
-	const modifier = path.modifier as HolonomicModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new HolonomicModifier(trajectory, waypoints, robot);
 
-	basicPathCheck(path);
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	holonomicModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.x[i].velocity).toBeCloseTo(0);
 		expect(modifier.x[i].position).toBeCloseTo(0);
 		expect(modifier.x[i].acceleration).toBeCloseTo(0);
@@ -57,11 +58,12 @@ test('holonomic / path (forward)', () => {
 		{ x: 0, y: 0, z: 0, heading: 45, velocity: 0, maxVelocity: robot.maxVelocity },
 		{ x: 2, y: 2, z: 0, heading: 45, velocity: 0, maxVelocity: robot.maxVelocity },
 	];
-	const path = new PathGenerator(waypoints, robot, HolonomicModifier);
-	const modifier = path.modifier as HolonomicModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new HolonomicModifier(trajectory, waypoints, robot);
 
-	basicPathCheck(path);
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	holonomicModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.x[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].position).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].position).toBeLessThanOrEqual(2);
@@ -81,11 +83,12 @@ test('holonomic \\ path (forward)', () => {
 		{ x: 0, y: 0, z: 0, heading: -45, velocity: 0, maxVelocity: robot.maxVelocity },
 		{ x: 2, y: -2, z: 0, heading: -45, velocity: 0, maxVelocity: robot.maxVelocity },
 	];
-	const path = new PathGenerator(waypoints, robot, HolonomicModifier);
-	const modifier = path.modifier as HolonomicModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new HolonomicModifier(trajectory, waypoints, robot);
 
-	basicPathCheck(path);
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	holonomicModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.x[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].position).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].position).toBeLessThanOrEqual(2);
@@ -105,11 +108,12 @@ test('holonomic S path (forward)', () => {
 		{ x: 0, y: 0, z: 0, heading: 0, velocity: 0, maxVelocity: robot.maxVelocity },
 		{ x: 2, y: 2, z: 0, heading: 0, velocity: 0, maxVelocity: robot.maxVelocity },
 	];
-	const path = new PathGenerator(waypoints, robot, HolonomicModifier);
-	const modifier = path.modifier as HolonomicModifier;
+	const trajectory = new Trajectory(waypoints, robot);
+	const modifier = new HolonomicModifier(trajectory, waypoints, robot);
 
-	basicPathCheck(path);
-	for (let i = 0; i < path.coords.length; i++) {
+	trajectoryCheck(trajectory, waypoints);
+	holonomicModifierCheck(modifier, trajectory);
+	for (let i = 0; i < trajectory.coords.length; i++) {
 		expect(modifier.x[i].velocity).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].position).toBeGreaterThanOrEqual(0);
 		expect(modifier.x[i].position).toBeLessThanOrEqual(2);

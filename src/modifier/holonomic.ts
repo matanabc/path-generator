@@ -3,12 +3,17 @@ import { Waypoint, Robot, Setpoint, Coord } from '../types';
 import { degreesToRadians } from '../utils';
 import Modifier from './modifier';
 
-export default class HolonomicModifier implements Modifier {
+export default class HolonomicModifier extends Modifier {
 	protected _setpointsX: Setpoint[] = [];
 	protected _setpointsY: Setpoint[] = [];
 	protected _setpointsZ: Setpoint[] = [];
 
-	modify({ coords }: Trajectory, waypoints: Waypoint[], robot: Robot): void {
+	constructor(trajectory: Trajectory, waypoints: Waypoint[], robot: Robot) {
+		super();
+		this.modify(trajectory, waypoints, robot);
+	}
+
+	protected modify({ coords }: Trajectory, waypoints: Waypoint[], robot: Robot): void {
 		const startPoint = waypoints[0];
 		coords.forEach((coord, index) => {
 			if (index === 0) this.generateFirstSetpoint(coord, startPoint);

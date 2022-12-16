@@ -1,6 +1,6 @@
-# PathGenerator Package
-
 ![npm](https://img.shields.io/npm/v/path-generator)
+
+# PathGenerator Package
 
 **PathGenerator** is a motion profile generator, which you can easily generate path for your robot to follow. <br/>
 To see an example of using this package you can take a look at [PathGenerator App](https://github.com/matanabc/path-generator-app).<br/>

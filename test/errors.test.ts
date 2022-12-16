@@ -6,8 +6,8 @@ import {
 	MaxVelocityEqualToNaNError,
 	SplineIsToLongError,
 	RobotValueEqualOrLessThenZeroError,
-} from '../';
-import { robot } from './';
+} from '../src';
+import { robot } from './utils';
 
 test('max velocity === 0', () => {
 	const waypoints: Waypoint[] = [

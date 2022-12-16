@@ -1,5 +1,5 @@
-import { Waypoint, Trajectory, TankModifier } from '../..';
-import { robot, trajectoryCheck, tankModifierCheck } from '../';
+import { Waypoint, Trajectory, TankModifier } from '../../src';
+import { robot, trajectoryCheck, tankModifierCheck } from '../utils';
 
 test('tank 0 » path', () => {
 	const waypoints: Waypoint[] = [

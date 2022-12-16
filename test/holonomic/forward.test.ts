@@ -1,5 +1,5 @@
-import { Waypoint, Trajectory, HolonomicModifier } from '../../';
-import { holonomicModifierCheck, robot, trajectoryCheck } from '../';
+import { Waypoint, Trajectory, HolonomicModifier } from '../../src';
+import { holonomicModifierCheck, robot, trajectoryCheck } from '../utils';
 
 test('holonomic - path (forward)', () => {
 	const waypoints: Waypoint[] = [

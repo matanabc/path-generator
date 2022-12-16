@@ -1,4 +1,8 @@
-import { MaxVelocityEqualToNaNError, MaxVelocityEqualToZeroError, MaxVelocitySmallerThenVEndError } from '../errors';
+import {
+	MaxVelocityEqualToNaNError,
+	MaxVelocityEqualToZeroError,
+	MaxVelocitySmallerThenEndVelocityError,
+} from '../errors';
 import { Coord, Robot, Setpoint, Waypoint } from '../types';
 import { getMaxVelocityByVelocity } from '../utils';
 import Segment, { SegmentBuilder } from './segment';
@@ -25,7 +29,7 @@ export default class Line {
 		if (Number.isNaN(this.maxVelocity)) throw new MaxVelocityEqualToNaNError();
 		if (this.maxVelocity === 0 && this.distance !== 0) throw new MaxVelocityEqualToZeroError();
 		if (Math.abs(this.maxVelocity) < Math.abs(this.endVelocity))
-			throw new MaxVelocitySmallerThenVEndError(this.startVelocity, this.endVelocity, this.maxVelocity);
+			throw new MaxVelocitySmallerThenEndVelocityError(this.startVelocity, this.endVelocity, this.maxVelocity);
 	}
 
 	public getWaypoints(): Waypoint[] {

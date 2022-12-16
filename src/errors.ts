@@ -27,7 +27,7 @@ export class SplineIsToLongError extends PathGeneratorBaseError {
 	}
 }
 
-export class MaxVelocitySmallerThenVEndError extends PathGeneratorBaseError {
+export class MaxVelocitySmallerThenEndVelocityError extends PathGeneratorBaseError {
 	public constructor(V0: number, vEnd: number, vMax: number) {
 		super(
 			'Max velocity is smaller then end velocity',
@@ -43,8 +43,8 @@ export class MaxVelocityEqualToNaNError extends PathGeneratorBaseError {
 	}
 }
 
-export class RobotValueEqualToZeroError extends PathGeneratorBaseError {
+export class RobotValueEqualOrLessThenZeroError extends PathGeneratorBaseError {
 	public constructor(value: string) {
-		super(`Robot ${value} is equal to 0`, `Increase robot ${value}`);
+		super(`Robot ${value} is equal or less then 0`, `Increase robot ${value}`);
 	}
 }

@@ -1,4 +1,4 @@
-import { PathGeneratorBaseError, RobotValueEqualToZeroError } from './errors';
+import { PathGeneratorBaseError, RobotValueEqualOrLessThenZeroError } from './errors';
 import { LineGenerator, SplineGenerator } from './generate';
 import { Line, Spline } from './motion_profiling';
 import { Coord, Robot, Setpoint, Waypoint } from './types';
@@ -17,9 +17,9 @@ export default class Trajectory {
 	}
 
 	protected checkRobot(robot: Robot): void {
-		if (robot.acceleration === 0) throw new RobotValueEqualToZeroError('acceleration');
-		else if (robot.maxVelocity === 0) throw new RobotValueEqualToZeroError('max velocity');
-		else if (robot.loopTime === 0) throw new RobotValueEqualToZeroError('loop time');
+		if (robot.acceleration <= 0) throw new RobotValueEqualOrLessThenZeroError('acceleration');
+		else if (robot.maxVelocity <= 0) throw new RobotValueEqualOrLessThenZeroError('max velocity');
+		else if (robot.loopTime <= 0) throw new RobotValueEqualOrLessThenZeroError('loop time');
 	}
 
 	private generate(waypoints: Waypoint[], robot: Robot): void {

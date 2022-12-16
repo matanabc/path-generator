@@ -1,6 +1,6 @@
-import { Line } from '../motion_profiling';
 import { Robot, Waypoint } from '../common/types';
 import { degreesToDistance, getMaxVelocityByTime } from '../common/utils';
+import { Line } from '../motion_profiling';
 
 export default class LineGenerator {
 	protected startPosition: number = 0;

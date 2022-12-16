@@ -1,8 +1,8 @@
-import { PathGeneratorBaseError, RobotValueEqualOrLessThenZeroError } from '../common/errors';
 import { LineGenerator, SplineGenerator } from '.';
-import { Line, Spline } from '../motion_profiling';
+import { PathGeneratorBaseError, RobotValueEqualOrLessThenZeroError } from '../common/errors';
 import { Coord, Robot, Setpoint, Waypoint } from '../common/types';
 import { distanceToDegrees, radiansToDegrees } from '../common/utils';
+import { Line, Spline } from '../motion_profiling';
 
 export default class Trajectory {
 	protected _splinesSetpoints: Setpoint[] = [];

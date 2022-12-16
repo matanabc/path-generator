@@ -1,6 +1,6 @@
-import Trajectory from '../generate/trajectory';
-import { Waypoint, Robot, Setpoint, Coord } from '../common/types';
+import { Coord, Robot, Setpoint, Waypoint } from '../common/types';
 import { degreesToRadians } from '../common/utils';
+import Trajectory from '../generate/trajectory';
 import Modifier from './modifier';
 
 export default class HolonomicModifier extends Modifier {

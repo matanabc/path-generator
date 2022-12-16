@@ -1,4 +1,4 @@
-import { Waypoint, HolonomicModifier, Trajectory } from '../../src';
+import { HolonomicModifier, Trajectory, Waypoint } from '../../src';
 import { holonomicModifierCheck, robot, trajectoryCheck } from '../utils';
 
 test('holonomic - path (backward)', () => {

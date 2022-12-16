@@ -1,6 +1,6 @@
-import Trajectory from '../generate/trajectory';
-import { Waypoint, Robot, Setpoint, Coord } from '../common/types';
+import { Coord, Robot, Setpoint, Waypoint } from '../common/types';
 import { changeSetpointDirection, degreesToRadians, mergeSetpoints, radiansToDegrees } from '../common/utils';
+import Trajectory from '../generate/trajectory';
 import Modifier from './modifier';
 
 export default class TankModifier extends Modifier {

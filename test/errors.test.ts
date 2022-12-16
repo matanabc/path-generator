@@ -1,11 +1,11 @@
 import {
-	Waypoint,
-	Trajectory,
-	MaxVelocitySmallerThenEndVelocityError,
-	MaxVelocityEqualToZeroError,
 	MaxVelocityEqualToNaNError,
-	SplineIsToLongError,
+	MaxVelocityEqualToZeroError,
+	MaxVelocitySmallerThenEndVelocityError,
 	RobotValueEqualOrLessThenZeroError,
+	SplineIsToLongError,
+	Trajectory,
+	Waypoint,
 } from '../src';
 import { robot } from './utils';
 

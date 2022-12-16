@@ -1,6 +1,6 @@
 import { HolonomicModifier, Robot, TankModifier, Trajectory, Waypoint } from '../src';
 
-export const robot: Robot = { acceleration: 2, maxVelocity: 2, length: 0.7, width: 0.6, loopTime: 0.02 };
+export const robot: Robot = { acceleration: 2, maxVelocity: 2, width: 0.6, loopTime: 0.02 };
 
 export function trajectoryCheck(trajectory: Trajectory, waypoints: Waypoint[]) {
 	const firstWaypoint = waypoints[0];

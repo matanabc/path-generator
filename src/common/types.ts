@@ -23,6 +23,5 @@ export type Robot = {
 	maxVelocity: number;
 	acceleration: number;
 	width: number;
-	length: number;
 	loopTime: number;
 };

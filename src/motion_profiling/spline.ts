@@ -1,7 +1,7 @@
 import Line from './line';
 import Arc from './arc';
-import { Coord, Robot, Waypoint } from '../types';
-import { SplineIsToLongError } from '../errors';
+import { Coord, Robot, Waypoint } from '../common/types';
+import { SplineIsToLongError } from '../common/errors';
 
 export default class Spline extends Line {
 	public readonly startPoint: Waypoint;

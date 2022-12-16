@@ -1,6 +1,6 @@
-import Trajectory from '../trajectory';
-import { Waypoint, Robot, Setpoint, Coord } from '../types';
-import { changeSetpointDirection, degreesToRadians, mergeSetpoints, radiansToDegrees } from '../utils';
+import Trajectory from '../generate/trajectory';
+import { Waypoint, Robot, Setpoint, Coord } from '../common/types';
+import { changeSetpointDirection, degreesToRadians, mergeSetpoints, radiansToDegrees } from '../common/utils';
 import Modifier from './modifier';
 
 export default class TankModifier extends Modifier {
@@ -27,7 +27,7 @@ export default class TankModifier extends Modifier {
 		});
 	}
 
-	protected splineModify(setpoint: Setpoint, coord: Coord, { width, loopTime }: Robot, index: number) {
+	protected splineModify(setpoint: Setpoint, coord: Coord, { width, loopTime }: Robot, index: number): void {
 		this._leftSetpoints.push({ ...setpoint });
 		this._rightSetpoints.push({ ...setpoint });
 		this._leftCoords.push(this.getCoord(coord, width));

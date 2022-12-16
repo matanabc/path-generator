@@ -1,5 +1,5 @@
-import { Coord, Waypoint } from '../types';
-import { boundRadians, degreesToRadians } from '../utils';
+import { Coord, Waypoint } from '../common/types';
+import { boundRadians, degreesToRadians } from '../common/utils';
 
 export default class Arc {
 	protected sampleCount: number = 100000;

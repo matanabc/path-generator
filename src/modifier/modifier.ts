@@ -1,5 +1,5 @@
-import Trajectory from '../trajectory';
-import { Robot, Waypoint } from '../types';
+import Trajectory from '../generate/trajectory';
+import { Robot, Waypoint } from '../common/types';
 
 export interface ModifierConstructor<T extends Modifier> {
 	new (trajectory: Trajectory, waypoints: Waypoint[], robot: Robot): T;

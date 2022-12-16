@@ -2,9 +2,9 @@ import {
 	MaxVelocityEqualToNaNError,
 	MaxVelocityEqualToZeroError,
 	MaxVelocitySmallerThenEndVelocityError,
-} from '../errors';
-import { Coord, Robot, Setpoint, Waypoint } from '../types';
-import { getMaxVelocityByVelocity } from '../utils';
+} from '../common/errors';
+import { Coord, Robot, Setpoint, Waypoint } from '../common/types';
+import { getMaxVelocityByVelocity } from '../common/utils';
 import Segment, { SegmentBuilder } from './segment';
 
 export default class Line {

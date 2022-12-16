@@ -1,6 +1,6 @@
-import Trajectory from '../trajectory';
-import { Waypoint, Robot, Setpoint, Coord } from '../types';
-import { degreesToRadians } from '../utils';
+import Trajectory from '../generate/trajectory';
+import { Waypoint, Robot, Setpoint, Coord } from '../common/types';
+import { degreesToRadians } from '../common/utils';
 import Modifier from './modifier';
 
 export default class HolonomicModifier extends Modifier {
@@ -33,7 +33,7 @@ export default class HolonomicModifier extends Modifier {
 		};
 	}
 
-	protected generateFirstSetpoint(coord: Coord, startPoint: Waypoint) {
+	protected generateFirstSetpoint(coord: Coord, startPoint: Waypoint): void {
 		const startVelocity = this.getStartVelocity(startPoint);
 		this._setpointsX = [{ acceleration: 0, position: coord.x, velocity: startVelocity.x }];
 		this._setpointsY = [{ acceleration: 0, position: coord.y, velocity: startVelocity.y }];
